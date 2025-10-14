@@ -1,0 +1,114 @@
+body {
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 40px 0;
+    color: #333;
+}
+
+h2, h3 {
+    margin-top: 0;
+    color: #007BFF;
+}
+
+.apprentice-infos {
+    background: #fff;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.apprentice-infos:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+h3 {
+    border-left: 4px solid #007BFF;
+    padding-left: 10px;
+    margin-top: 35px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+p {
+    margin: 8px 0;
+    font-size: 1.05em;
+    line-height: 1.5;
+}
+
+p span {
+    font-weight: 500;
+    color: #222;
+}
+
+.enterprise-infos,
+.supervisor-infos,
+.school-evaluation-infos,
+.defense-infos,
+.visit-infos,
+.mission-infos,
+.tutor-infos {
+    background-color: #f9fbff;
+    border: 1px solid #e3e8f0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+
+.visit {
+    background-color: #fff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    transition: background 0.2s ease;
+}
+
+.visit:hover {
+    background-color: #f3f6fc;
+}
+
+.apprentice-infos > p {
+    background-color: #f0f4ff;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    .apprentice-infos {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    p {
+        font-size: 1em;
+    }
+}
+
+a{
+    text-decoration: none;
+    color: #007BFF;
+}
+
+a:hover{
+    color: #3d9cff;
+}
