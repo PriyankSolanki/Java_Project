@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Information de l'apprenti</title>
+    <link rel="stylesheet" th:href="@{/css/apprentiInfos.css}">
+</head>
+<body>
+<h2>Informations de l'apprenti</h2>
+<div class="apprentice-infos">
+    <p>Id : <span th:text="${apprenti.id}"></span></p>
+    <p>Nom : <span th:text="${apprenti.nom}"></span></p>
+    <p>Prénom : <span th:text="${apprenti.prenom}"></span></p>
+    <p>Adresse : <span th:text="${apprenti.adresse}"></span></p>
+    <p>Téléphone : <span th:text="${apprenti.telephone}"></span></p>
+    <p>Niveau : <span th:text="${apprenti.anneeLevel}"></span></p>
+    <p>Email : <span th:text="${apprenti.email}"></span></p>
+    <p>Actif : <span th:text="${apprenti.etat}"></span></p>
+    <div class="enterprise-infos">
+        <h3>Entreprise</h3>
+        <p>Raison sociale : <span th:text="${apprenti.entreprise.raisonSociale}"></span></p>
+        <p>Adresse : <span th:text="${apprenti.entreprise.adresse}"></span></p>
+    </div>
+    <div class="supervisor-infos">
+        <h3>Maître d'apprentissage</h3>
+        <p>Nom : <span th:text="${apprenti.maitreApprentissage.nom}"></span></p>
+        <p>Prénom : <span th:text="${apprenti.maitreApprentissage.prenom}"></span></p>
+        <p>Email : <span th:text="${apprenti.maitreApprentissage.email}"></span></p>
+        <p>Poste : <span th:text="${apprenti.maitreApprentissage.poste}"></span></p>
+        <p>Téléphone : <span th:text="${apprenti.maitreApprentissage.telephone}"></span></p>
+    </div>
+
+    <div class="school-evaluation-infos">
+        <h3>Évaluation de l'école</h3>
+        <p>Thème : <span th:text="${apprenti.evaluationEcole.theme}"></span></p>
+        <p>Commentaire : <span th:text="${apprenti.evaluationEcole.commentaires}"></span></p>
+        <p>Note : <span th:text="${apprenti.evaluationEcole.noteFinale}"></span></p>
+    </div>
+
+    <div class="defense-infos">
+        <h3>Soutenance</h3>
+        <p>Date : <span th:text="${apprenti.soutenance.date}"></span></p>
+        <p>Commentaire : <span th:text="${apprenti.soutenance.commentaires}"></span></p>
+        <p>Note : <span th:text="${apprenti.soutenance.noteFinale}"></span></p>
+    </div>
+    <div class="visit-infos">
+        <h3>Visite(s)</h3>
+        <div class="visit" th:each="visit : ${apprenti.visites}">
+            <p>Visite du <span th:text="${visit.date}"></span></p>
+            <p>Format : <span th:text="${visit.format}"></span></p>
+            <p>Commentaire : <span th:text="${visit.commentaires}"></span></p>
+        </div>
+    </div>
+
+    <div class="mission-infos">
+        <h3>Mission</h3>
+        <p>Mots clés : <span th:text="${apprenti.mission.motsCles}"></span></p>
+        <p>Métier : <span th:text="${apprenti.mission.metierCible}"></span></p>
+        <p>Commentaire : <span th:text="${apprenti.mission.commentaires}"></span></p>
+    </div>
+
+    <div class="tutor-infos">
+        <h3>Infos supplémentaires</h3>
+        <p>Remarques : <span th:text="${apprenti.remarques}"></span></p>
+        <p>Feedback : <span th:text="${apprenti.feedbackTuteurEnseignant}"></span></p>
+    </div>
+</div>
+
+
+</body>
+</html>

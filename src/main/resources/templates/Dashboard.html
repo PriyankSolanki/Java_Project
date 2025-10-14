@@ -6,8 +6,8 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
 <body>
-<h2 th:text="'Promotion ' + ${anneeAcademique.annee}"></h2>
 <table>
+  <caption th:text="'Promotion ' + ${anneeAcademique.annee}"></caption>
   <thead>
     <tr>
       <th>#</th>
@@ -21,7 +21,7 @@
       <td th:text="${apprenti.id}"></td>
       <td th:text="${apprenti.prenom}">-</td>
       <td th:text="${apprenti.nom}">-</td>
-      <td>détail</td>
+      <td><a th:href="@{/apprentice/{id}(id=${apprenti.id})}">détail</a></td>
     </tr>
     <tr>
       <td colspan="4" class="no-apprentice" th:if="${#lists.isEmpty(apprentis)}">
