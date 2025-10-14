@@ -1,0 +1,20 @@
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #000000;
+    padding: 10px;
+}
+
+th {
+    background-color: #6e6e6e;
+    color: white;
+}
+
+.no-apprentice {
+    text-align: center;
+    font-style: italic;
+    color: #c40000;
+}

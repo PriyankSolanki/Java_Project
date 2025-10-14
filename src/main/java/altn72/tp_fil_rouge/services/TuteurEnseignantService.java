@@ -23,7 +23,6 @@ public class TuteurEnseignantService {
         TuteurEnseignant tuteurEnseignant = tuteurEnseignantRepository.findById(Long.valueOf(id)).orElse(null);
 
         if(tuteurEnseignant == null) {
-            System.out.println("Ce tuteur enseignant n'existe pas"); //lever une exception
             return Optional.empty();
         }else{
             return Optional.of(tuteurEnseignant);
