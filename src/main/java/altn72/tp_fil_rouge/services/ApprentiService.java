@@ -6,6 +6,7 @@ import altn72.tp_fil_rouge.repositories.ApprentiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +28,13 @@ public class ApprentiService {
         }else{
             return Optional.of(apprenti);
         }
+    }
+
+    public List<Apprenti> search(String name, String enterprise, String promotion,String keywords) {
+
+        if(name == null || enterprise == null || promotion == null || keywords == null || name.isEmpty() && enterprise.isEmpty() && promotion.isEmpty() && keywords.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return apprentiRepository.search(name, enterprise, promotion, keywords);
     }
 }

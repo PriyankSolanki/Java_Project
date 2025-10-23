@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recherche</title>
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+</head>
+<body>
+
+<div th:replace="partials/navbar :: navbar"></div>
+<main class="search-container">
+    <h1>Recherche d'apprentis</h1>
+
+    <form th:action="@{/search}" method="get" class="search-form">
+        <div class="form-group">
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" placeholder="Ex : Lucas" />
+        </div>
+
+        <div class="form-group">
+            <label for="enterprise">Entreprise :</label>
+            <input type="text" id="enterprise" name="enterprise" placeholder="Ex : Martin" />
+        </div>
+
+        <div class="form-group">
+            <label for="keywords">Mot-clés :</label>
+            <input type="text" id="keywords" name="keywords" placeholder="Ex : php, java, ..." />
+        </div>
+
+        <div class="form-group">
+            <label for="promotion">Promotion :</label>
+            <input type="text" id="promotion" name="promotion" placeholder="Ex : 2024" />
+        </div>
+
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <div class="results" th:if="${apprentis}">
+        <h2>Résultats :</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Promotion</th>
+                <th>Détail</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="apprenti : ${apprentis}">
+                <td th:text="${apprenti.id}"></td>
+                <td th:text="${apprenti.prenom}"></td>
+                <td th:text="${apprenti.nom}"></td>
+                <td th:text="${apprenti.anneeAcademique.annee}"></td>
+                <td><a th:href="@{/apprentice/{id}(id=${apprenti.id})}">Voir</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(apprentis)}">
+                <td colspan="5" class="no-result">Aucun apprenti trouvé.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

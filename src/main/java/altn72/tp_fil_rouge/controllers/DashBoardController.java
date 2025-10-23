@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class DashBoardController {
 
         model.addAttribute("apprentis", apprentisActive);
         model.addAttribute("anneeAcademique", anneeAcademique);
-        return "Dashboard";
+        return "pages/Dashboard";
     }
 
     @GetMapping("/apprentice/{id}")
@@ -58,6 +59,18 @@ public class DashBoardController {
                 () -> new ApprentiNotFoundException(id)
         );
         model.addAttribute("apprenti", apprenti);
-        return "ApprentiInfos";
+        return "pages/ApprentiInfos";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model,
+                         @RequestParam(required = false) String name,
+                         @RequestParam(required = false) String enterprise,
+                         @RequestParam(required = false) String promotion,
+                         @RequestParam(required = false) String keywords) {
+
+            List<Apprenti> apprentis = apprentiService.search(name, enterprise, promotion, keywords);
+            model.addAttribute("apprentis", apprentis);
+        return "pages/Search";
     }
 }
