@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Apprentis sans maître d’apprentissage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root { --b:#e5e7eb; --txt:#111827; --muted:#6b7280; }
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;color:var(--txt)}
+        .card{max-width:1100px;margin:auto;padding:1.25rem;border:1px solid var(--b);border-radius:14px;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+        h1{margin:.25rem 0 1rem 0}
+        .toolbar{display:flex;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+        .muted{color:var(--muted)}
+        input[type=search]{width:340px;max-width:100%;padding:.6rem .8rem;border:1px solid var(--b);border-radius:10px}
+        table{width:100%;border-collapse:collapse;border:1px solid var(--b);border-radius:12px;overflow:hidden}
+        th,td{padding:.65rem .8rem;border-bottom:1px solid var(--b);text-align:left}
+        th{background:#f9fafb;font-weight:600}
+        tr:hover{background:#fcfcfd}
+        .btn{display:inline-block;padding:.45rem .7rem;border-radius:10px;border:1px solid var(--b);text-decoration:none}
+        .btn-primary{background:#111827;color:#fff;border-color:#111827}
+        .empty{padding:1rem;border:1px dashed var(--b);border-radius:12px;text-align:center}
+        small{color:var(--muted)}
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="toolbar">
+        <div>
+            <h1>Apprentis sans maître d’apprentissage</h1>
+            <small class="muted" th:text="'Total : ' + ${total}"></small>
+        </div>
+        <input id="q" type="search" placeholder="Rechercher (nom, email, entreprise, année)…">
+    </div>
+
+    <div th:if="${#lists.isEmpty(apprentis)}" class="empty">
+        Aucun apprenti sans maître pour le moment 🎉
+    </div>
+
+    <table th:if="${!#lists.isEmpty(apprentis)}" id="tbl">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Apprenti</th>
+            <th>Email</th>
+            <th>Entreprise</th>
+            <th>Année</th>
+            <th>Tuteur</th>
+            <th style="width:1%">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${apprentis}">
+            <td th:text="${a.id}"></td>
+            <td th:text="${(a.prenom!=null? a.prenom:'') + ' ' + (a.nom!=null? a.nom:'')}"></td>
+            <td th:text="${a.email}"></td>
+            <td th:text="${a.entreprise != null && a.entreprise.raisonSociale != null ? a.entreprise.raisonSociale : '—'}"></td>
+            <td th:text="${a.anneeLevel != null ? a.anneeLevel : '—'}"></td>
+            <td th:text="${a.tuteurEnseignant != null ? ( (a.tuteurEnseignant.prenom!=null? a.tuteurEnseignant.prenom:'') + ' ' + (a.tuteurEnseignant.nom!=null? a.tuteurEnseignant.nom:'') ) : '—'}"></td>
+            <td>
+                <a th:href="@{'/ui/affectation'(apprentiId=${a.id})}" class="btn btn-primary">Affecter</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Recherche simple côté client (filtre les lignes)
+    const q = document.getElementById('q');
+    const tbl = document.getElementById('tbl');
+    if (q && tbl){
+        q.addEventListener('input', () => {
+            const term = q.value.toLowerCase().trim();
+            const rows = tbl.querySelectorAll('tbody tr');
+            rows.forEach(tr => {
+                const txt = tr.innerText.toLowerCase();
+                tr.style.display = txt.includes(term) ? '' : 'none';
+            });
+        });
+    }
+</script>
+</body>
+</html>
