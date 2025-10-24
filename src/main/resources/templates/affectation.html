@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Affecter un apprenti à un maître</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;}
+        .card{max-width:720px;margin:auto;padding:1.5rem;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.05);}
+        label{display:block;margin:.5rem 0 .25rem;font-weight:600}
+        select,button{width:100%;padding:.6rem;border:1px solid #cbd5e1;border-radius:10px}
+        button{margin-top:1rem;cursor:pointer}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .toast{margin-top:1rem;padding:.75rem;border-radius:10px;display:none}
+        .ok{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
+        .err{background:#fff1f2;border:1px solid #f43f5e;color:#991b1b}
+        small{color:#6b7280}
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Affecter un apprenti à son maître d’apprentissage</h1>
+    <p><small>Sélectionne un apprenti et un maître, puis clique sur “Affecter”.</small></p>
+
+    <div class="row">
+        <div>
+            <label for="apprenti">Apprenti</label>
+            <select id="apprenti">
+                <option value="" disabled selected>— choisir un apprenti —</option>
+                <option th:each="a : ${apprentis}"
+                        th:value="${a.id}"
+                        th:text="${a.prenom} + ' ' + ${a.nom} + ' (id=' + ${a.id} + ')'">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="maitre">Maître d’apprentissage</label>
+            <select id="maitre">
+                <option value="" disabled selected>— choisir un maître —</option>
+                <option th:each="m : ${maitres}"
+                        th:value="${m.id}"
+                        th:text="${m.prenom} + ' ' + ${m.nom} + ' (id=' + ${m.id} + ')'">
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <button id="btnAffecter">Affecter</button>
+
+    <div id="toastOk" class="toast ok"></div>
+    <div id="toastErr" class="toast err"></div>
+</div>
+
+<script>
+    const $ = (q)=>document.querySelector(q);
+    const ok = $('#toastOk'), err = $('#toastErr');
+
+    function show(el, msg){ el.textContent = msg; el.style.display = 'block';
+        setTimeout(()=>{el.style.display='none'}, 4000);
+    }
+
+    document.getElementById('btnAffecter').addEventListener('click', async () => {
+        const apprentiId = document.getElementById('apprenti').value;
+        const maitreId   = document.getElementById('maitre').value;
+
+        if(!apprentiId || !maitreId){
+            show(err, 'Sélectionne un apprenti et un maître.');
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/maitres/${maitreId}/apprentis/${apprentiId}`, { method: 'PUT' });
+            const text = await res.text(); // peut être JSON
+            if(res.ok){
+                // Essaye de lire JSON (DTO) si présent
+                let dto;
+                try { dto = JSON.parse(text); } catch(e) { dto = null; }
+                const nom = dto ? `${dto.prenom} ${dto.nom}` : `Apprenti ${apprentiId}`;
+                show(ok, `✅ ${nom} affecté au maître #${maitreId} avec succès.`);
+            } else {
+                show(err, `Erreur ${res.status} : ${text}`);
+            }
+        } catch(e){
+            show(err, `Erreur réseau : ${e.message}`);
+        }
+    });
+</script>
+</body>
+</html>

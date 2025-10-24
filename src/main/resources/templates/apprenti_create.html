@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Créer un apprenti</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;}
+        .card{max-width:860px;margin:auto;padding:1.5rem;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+        h1{margin:0 0 1rem 0}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        label{display:block;font-weight:600;margin:.25rem 0}
+        input,select,textarea{width:100%;padding:.6rem;border:1px solid #cbd5e1;border-radius:10px}
+        textarea{min-height:80px}
+        button{margin-top:1rem;padding:.75rem 1rem;border:0;border-radius:12px;cursor:pointer}
+        .primary{background:#111827;color:#fff}
+        .muted{background:#f9fafb}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .toast{margin-top:1rem;padding:.8rem;border-radius:10px;display:none}
+        .ok{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
+        .err{background:#fff1f2;border:1px solid #f43f5e;color:#991b1b;white-space:pre-wrap}
+        small{color:#6b7280}
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Créer un apprenti</h1>
+    <p><small>Les champs marqués * sont obligatoires.</small></p>
+
+    <div class="grid">
+        <div>
+            <label for="prenom">Prénom *</label>
+            <input id="prenom" placeholder="Ex: Lucas">
+        </div>
+        <div>
+            <label for="nom">Nom *</label>
+            <input id="nom" placeholder="Ex: Dubois">
+        </div>
+
+        <div>
+            <label for="email">Email *</label>
+            <input id="email" type="email" placeholder="exemple@mail.com">
+        </div>
+        <div>
+            <label for="telephone">Téléphone</label>
+            <input id="telephone" placeholder="06...">
+        </div>
+
+        <div class="row">
+            <div>
+                <label for="etat">État</label>
+                <select id="etat">
+                    <option value="">(non défini)</option>
+                    <option>ACTIF</option>
+                    <option>INACTIF</option>
+                </select>
+            </div>
+            <div>
+                <label for="anneeLevel">Année</label>
+                <select id="anneeLevel">
+                    <option value="">(non défini)</option>
+                    <option>I1</option><option>I2</option><option>I3</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="grid-column:1/3">
+            <label for="adresse">Adresse</label>
+            <input id="adresse" placeholder="Rue, CP Ville">
+        </div>
+
+        <div>
+            <label for="entreprise">Entreprise</label>
+            <select id="entreprise">
+                <option value="">— aucune —</option>
+                <option th:each="e : ${entreprises}"
+                        th:value="${e.id}"
+                        th:text="${(e.raisonSociale != null && !#strings.isEmpty(e.raisonSociale)) ? e.raisonSociale : 'Entreprise #'+e.id}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="maitre">Maître d’apprentissage</label>
+            <select id="maitre">
+                <option value="">— aucun —</option>
+                <option th:each="m : ${maitres}"
+                        th:value="${m.id}"
+                        th:text="${(m.prenom != null ? m.prenom : '') + ' ' + (m.nom != null ? m.nom : '') + ' (#'+m.id+')'}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="tuteur">Tuteur enseignant</label>
+            <select id="tuteur">
+                <option value="">— aucun —</option>
+                <option th:each="t : ${tuteurs}"
+                        th:value="${t.id}"
+                        th:text="${(t.prenom != null ? t.prenom : '') + ' ' + (t.nom != null ? t.nom : '') + ' (#'+t.id+')'}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="annee">Année académique</label>
+            <select id="annee">
+                <option value="">— aucune —</option>
+                <!-- On n’utilise que l’id, pour éviter un champ inconnu -->
+                <option th:each="a : ${annees}"
+                        th:value="${a.id}"
+                        th:text="${'Année #'+a.id}"></option>
+            </select>
+        </div>
+
+        <div style="grid-column:1/3">
+            <label for="remarques">Remarques</label>
+            <textarea id="remarques"></textarea>
+        </div>
+    </div>
+
+    <div style="display:flex;gap:.6rem">
+        <button class="primary" id="btnCreate">Créer</button>
+        <button class="muted" type="button" id="btnReset">Réinitialiser</button>
+    </div>
+
+    <div id="toastOk" class="toast ok"></div>
+    <div id="toastErr" class="toast err"></div>
+</div>
+
+<script>
+    const $ = (q)=>document.querySelector(q);
+    const ok=$('#toastOk'), err=$('#toastErr');
+
+    function toNullIfEmpty(v){ return v==='' ? null : v; }
+    function show(el,msg){ el.textContent=msg; el.style.display='block';
+        setTimeout(()=>{el.style.display='none'}, 6000); }
+
+    // (facultatif) pour mettre une bordure rouge sur les champs en erreur
+    const fieldMap = {
+        email: '#email',
+        prenom: '#prenom',
+        nom: '#nom',
+        telephone: '#telephone',
+        adresse: '#adresse',
+        etat: '#etat',
+        anneeLevel: '#anneeLevel',
+        entrepriseId: '#entreprise',
+        maitreId: '#maitre',
+        tuteurId: '#tuteur',
+        anneeAcademiqueId: '#annee'
+    };
+    function clearFieldErrors(){
+        Object.values(fieldMap).forEach(sel=>{
+            const el = $(sel); if(el){ el.style.borderColor = '#cbd5e1'; }
+        });
+    }
+    function markFieldError(field){
+        const sel = fieldMap[field];
+        if(sel){ const el = $(sel); if(el){ el.style.borderColor = '#ef4444'; } }
+    }
+
+    $('#btnCreate').addEventListener('click', async () => {
+        clearFieldErrors();
+
+        const prenom = $('#prenom').value.trim();
+        const nom = $('#nom').value.trim();
+        const email = $('#email').value.trim();
+        if(!prenom || !nom || !email){
+            show(err, 'Les champs * (prénom, nom, email) sont obligatoires.');
+            return;
+        }
+
+        const payload = {
+            prenom, nom, email,
+            telephone: toNullIfEmpty($('#telephone').value.trim()),
+            adresse: toNullIfEmpty($('#adresse').value.trim()),
+            etat: toNullIfEmpty($('#etat').value),
+            anneeLevel: toNullIfEmpty($('#anneeLevel').value),
+            entrepriseId: toNullIfEmpty($('#entreprise').value) ? Number($('#entreprise').value) : null,
+            maitreId: toNullIfEmpty($('#maitre').value) ? Number($('#maitre').value) : null,
+            tuteurId: toNullIfEmpty($('#tuteur').value) ? Number($('#tuteur').value) : null,
+            anneeAcademiqueId: toNullIfEmpty($('#annee').value) ? Number($('#annee').value) : null,
+            remarques: toNullIfEmpty($('#remarques').value)
+        };
+
+        try{
+            const res = await fetch('/api/apprentis', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(payload)
+            });
+
+            // ----- SUCCESS -----
+            if(res.ok || res.status === 201){
+                const dto = await res.json().catch(()=>null);
+                const label = dto ? `${dto.prenom} ${dto.nom} (#${dto.id})` : 'Apprenti';
+                show(ok, `✅ ${label} créé avec succès.`);
+                return;
+            }
+
+            // ----- ERROR: n’afficher que les messages utiles -----
+            const ct = res.headers.get('content-type') || '';
+            let userMessage = `Erreur ${res.status}`;
+            if (ct.includes('application/json')) {
+                const data = await res.json().catch(()=>null);
+                if (data) {
+                    // prioriser les messages champ par champ
+                    if (Array.isArray(data.fieldErrors) && data.fieldErrors.length) {
+                        // Affiche la première erreur (ou join pour plusieurs)
+                        userMessage = data.fieldErrors
+                            .map(fe => `${fe.field} : ${fe.message}`)
+                            .join('\n');
+
+                        // surligner les champs en erreur (facultatif)
+                        data.fieldErrors.forEach(fe => markFieldError(fe.field));
+                    } else if (data.message) {
+                        userMessage = data.message;
+                    }
+                }
+            } else {
+                // fallback text brut
+                const text = await res.text();
+                userMessage = text || userMessage;
+            }
+            show(err, userMessage);
+
+        }catch(e){
+            show(err, 'Erreur réseau: ' + e.message);
+        }
+    });
+</script>
+</body>
+</html>
