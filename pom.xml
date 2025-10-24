@@ -48,6 +48,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Ajout des dépendances pour CSV-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.11.0</version>
+        </dependency>
+
         <!-- MySQL Connector (géré par Spring Boot) -->
         <dependency>
             <groupId>com.mysql</groupId>
