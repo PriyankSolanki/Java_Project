@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div th:replace="partials/navbar :: navbar"></div>
+
+<table>
+  <caption th:text="'Promotion ' + ${anneeAcademique.annee}"></caption>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Prénom</th>
+      <th>Nom</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="apprenti : ${apprentis}">
+      <td th:text="${apprenti.id}"></td>
+      <td th:text="${apprenti.prenom}">-</td>
+      <td th:text="${apprenti.nom}">-</td>
+      <td><a th:href="@{/apprentice/{id}(id=${apprenti.id})}">détail</a></td>
+    </tr>
+    <tr>
+      <td colspan="4" class="no-apprentice" th:if="${#lists.isEmpty(apprentis)}">
+        La liste est vide ajouter au moins un apprenti
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
