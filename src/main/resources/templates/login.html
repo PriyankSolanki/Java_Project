@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion Tuteur</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="login-body">
+<div class="login-container">
+    <h2>Connexion Tuteur</h2>
+    <form th:action="@{/login}" method="post" class="login-form">
+        <div class="form-group">
+            <label for="username">Login</label>
+            <input type="text" id="username" name="username" required placeholder="Entrez votre identifiant">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" required placeholder="Entrez votre mot de passe">
+        </div>
+
+        <button type="submit" class="btn">Se connecter</button>
+
+        <p th:if="${param.error}" class="error-message">Login ou mot de passe incorrect</p>
+        <p th:if="${param.logout}" class="success-message">Déconnecté avec succès</p>
+    </form>
+</div>
+</body>
+</html>
