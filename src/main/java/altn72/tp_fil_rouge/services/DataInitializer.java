@@ -20,6 +20,7 @@ public class DataInitializer implements CommandLineRunner {
     private final VisiteRepository visiteRepo;
     private final EvaluationEcoleRepository evalRepo;
     private final SoutenanceRepository soutenanceRepo;
+    private final TuteurService tuteurService;
 
     public DataInitializer(TuteurEnseignantRepository tuteurRepo,
                            ApprentiRepository apprentiRepo,
@@ -28,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
                            AnneeAcademiqueRepository anneeRepo,
                            VisiteRepository visiteRepo,
                            EvaluationEcoleRepository evalRepo,
-                           SoutenanceRepository soutenanceRepo) {
+                           SoutenanceRepository soutenanceRepo,TuteurService tuteurService) {
         this.tuteurRepo = tuteurRepo;
         this.apprentiRepo = apprentiRepo;
         this.entrepriseRepo = entrepriseRepo;
@@ -37,6 +38,7 @@ public class DataInitializer implements CommandLineRunner {
         this.visiteRepo = visiteRepo;
         this.evalRepo = evalRepo;
         this.soutenanceRepo = soutenanceRepo;
+        this.tuteurService=tuteurService;
     }
 
     @Override
@@ -45,8 +47,18 @@ public class DataInitializer implements CommandLineRunner {
         // --- Check si la base est vide ---
         if (tuteurRepo.count() > 0) {
             System.out.println("Base déjà initialisée, aucune action effectuée.");
+            System.out.println("Tuteur initialisé : admin123 / 000000");
             return;
         }
+
+            TuteurEnseignant t = new TuteurEnseignant();
+            t.setPrenom("admin");
+            t.setNom("admin");
+            t.setLogin("admin123");
+            t.setMotDePasse("000000");
+            tuteurService.saveTuteur(t);
+            System.out.println("Tuteur initialisé : admin123 / 000000");
+
 
         // --- Création d'années académiques ---
         AnneeAcademique annee2025 = new AnneeAcademique();
