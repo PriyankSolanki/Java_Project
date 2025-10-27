@@ -50,7 +50,7 @@ public class DashboardController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(Model model, @AuthenticationPrincipal User principal) {
         // récupère le TuteurEnseignant connecté via son login
         TuteurEnseignant tuteurEnseignantConnected = tuteurRepo.findByLogin(principal.getUsername())
                 .orElseThrow(() -> new RuntimeException("Tuteur non trouvé"));
