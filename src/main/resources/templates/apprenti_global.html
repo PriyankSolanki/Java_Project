@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Gestion apprentis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root { --b:#e5e7eb; --txt:#111827; --muted:#6b7280; --alert:#dc2626; }
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;color:var(--txt)}
+        .card{max-width:1200px;margin:auto;padding:1.25rem;border:1px solid var(--b);border-radius:14px;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+        h1{margin:.25rem 0 .75rem 0}
+        .muted{color:var(--muted)}
+        .tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+        .tab-btn{padding:.5rem .8rem;border:1px solid var(--b);border-radius:10px;background:#fff;cursor:pointer}
+        .tab-btn.active{background:#111827;color:#fff;border-color:#111827}
+        .section{display:none}
+        .section.active{display:block}
+
+        /* Table / Toolbar (dashboard) */
+        .toolbar{display:flex;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+        input[type=search]{width:340px;max-width:100%;padding:.6rem .8rem;border:1px solid var(--b);border-radius:10px}
+        table{width:100%;border-collapse:collapse;border:1px solid var(--b);border-radius:12px;overflow:hidden}
+        th,td{padding:.65rem .8rem;border-bottom:1px solid var(--b);text-align:left}
+        th{background:#f9fafb;font-weight:600}
+        tr:hover{background:#fcfcfd}
+        .btn{display:inline-block;padding:.45rem .7rem;border-radius:10px;border:1px solid var(--b);text-decoration:none;background:#fff}
+        .btn-primary{background:#111827;color:#fff;border-color:#111827}
+        .empty{padding:1rem;border:1px dashed var(--b);border-radius:12px;text-align:center}
+        small{color:var(--muted)}
+        .total-alert{color:var(--alert);font-weight:700;font-size:1.25rem}
+
+        /* Forms (création & affectation) */
+        label{display:block;margin:.5rem 0 .25rem;font-weight:600}
+        select,button,input,textarea{width:100%;padding:.6rem;border:1px solid #cbd5e1;border-radius:10px}
+        button.primary{margin-top:1rem;cursor:pointer;background:#111827;color:#fff;border-color:#111827}
+        button.muted{margin-top:1rem;background:#f9fafb;border-color:var(--b)}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        textarea{min-height:80px}
+        .toast{margin-top:1rem;padding:.75rem;border-radius:10px;display:none}
+        .ok{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
+        .err{background:#fff1f2;border:1px solid #f43f5e;color:#991b1b;white-space:pre-wrap}
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Gestion des apprentis</h1>
+    <p class="muted" style="margin-top:-.25rem">Tableau des apprentis sans maître d'apprentissage, création d'un apprenti, et affectation</p>
+
+    <!-- Onglets -->
+    <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="tab-dashboard" role="tab" aria-controls="tab-dashboard">Apprentis sans maître d'apprentissage</button>
+        <button class="tab-btn" data-tab="tab-create" role="tab" aria-controls="tab-create">Créer un apprenti</button>
+        <button class="tab-btn" data-tab="tab-affect" role="tab" aria-controls="tab-affect">Affecter un apprenti à un maitre d'apprentissage</button>
+    </div>
+
+    <!-- SECTION 1 : DASHBOARD SANS MAÎTRE -->
+    <section id="tab-dashboard" class="section active" role="tabpanel">
+        <div class="toolbar">
+            <div>
+                <h2 style="margin:.25rem 0">Apprentis sans maître d’apprentissage</h2>
+                <span class="total-alert" th:text="'Total : ' + ${total}"></span>
+            </div>
+            <input id="dash_q" type="search" placeholder="Rechercher (nom, email, entreprise, année)…">
+        </div>
+
+        <div th:if="${#lists.isEmpty(apprentis)}" class="empty">
+            Aucun apprenti sans maître pour le moment !
+        </div>
+
+        <table th:if="${!#lists.isEmpty(apprentis)}" id="dash_tbl">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Apprenti</th>
+                <th>Email</th>
+                <th>Entreprise</th>
+                <th>Année</th>
+                <th>Tuteur</th>
+                <th style="width:1%">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${apprentis}">
+                <td th:text="${a.id}"></td>
+                <td th:text="${(a.prenom!=null? a.prenom:'') + ' ' + (a.nom!=null? a.nom:'')}"></td>
+                <td th:text="${a.email}"></td>
+                <td th:text="${a.entreprise != null && a.entreprise.raisonSociale != null ? a.entreprise.raisonSociale : '—'}"></td>
+                <td th:text="${a.anneeLevel != null ? a.anneeLevel : '—'}"></td>
+                <td th:text="${a.tuteurEnseignant != null ? ( (a.tuteurEnseignant.prenom!=null? a.tuteurEnseignant.prenom:'') + ' ' + (a.tuteurEnseignant.nom!=null? a.tuteurEnseignant.nom:'') ) : '—'}"></td>
+                <td>
+                    <button type="button" class="btn btn-primary go-affect"
+                            th:attr="data-apprenti-id=${a.id}">Affecter</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 2 : CRÉER UN APPRENTI -->
+    <section id="tab-create" class="section" role="tabpanel">
+        <h2 style="margin:.25rem 0 .5rem">Créer un apprenti</h2>
+        <p><small class="muted">Les champs marqués * sont obligatoires.</small></p>
+
+        <!-- BOUTON IMPORT CSV EN HAUT -->
+        <div style="display:flex;gap:.6rem;align-items:center;margin:.5rem 0 1rem;flex-wrap:wrap">
+            <input id="create_csvInput" type="file" accept=".csv" style="display:none">
+            <button class="muted" type="button" id="create_btnImportCsv" title="Importer des apprentis depuis un fichier CSV">
+                Importer CSV
+            </button>
+            <small class="muted">Format attendu : en-tête (prenom, nom, email, …). Le rapport s’affiche ci-dessous.</small>
+        </div>
+
+        <!-- Rapport d'import -->
+        <div id="create_importReport"
+             class="toast"
+             style="display:none;margin-top:.2rem;border:1px solid #e5e7eb;border-radius:10px;padding:.8rem;background:#f9fafb"></div>
+
+        <!-- Formulaire de création -->
+        <div class="grid" style="margin-top:1rem">
+            <div>
+                <label for="create_prenom">Prénom *</label>
+                <input id="create_prenom" placeholder="Ex: Lucas">
+            </div>
+            <div>
+                <label for="create_nom">Nom *</label>
+                <input id="create_nom" placeholder="Ex: Dubois">
+            </div>
+
+            <div>
+                <label for="create_email">Email *</label>
+                <input id="create_email" type="email" placeholder="exemple@mail.com">
+            </div>
+            <div>
+                <label for="create_telephone">Téléphone</label>
+                <input id="create_telephone" placeholder="06...">
+            </div>
+
+            <div class="row">
+                <div>
+                    <label for="create_etat">État</label>
+                    <select id="create_etat">
+                        <option value="">(non défini)</option>
+                        <option>ACTIF</option>
+                        <option>INACTIF</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="create_anneeLevel">Année</label>
+                    <select id="create_anneeLevel">
+                        <option value="">(non défini)</option>
+                        <option>I1</option><option>I2</option><option>I3</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="grid-column:1/2">
+                <label for="create_adresse">Adresse</label>
+                <input id="create_adresse" placeholder="Rue, CP Ville">
+            </div>
+
+            <div>
+                <label for="create_entreprise">Entreprise</label>
+                <select id="create_entreprise">
+                    <option value="">— aucune —</option>
+                    <option th:each="e : ${entreprises}"
+                            th:value="${e.id}"
+                            th:text="${(e.raisonSociale != null && !#strings.isEmpty(e.raisonSociale)) ? e.raisonSociale : 'Entreprise #'+e.id}"></option>
+                </select>
+            </div>
+
+            <div>
+                <label for="create_maitre">Maître d’apprentissage</label>
+                <select id="create_maitre">
+                    <option value="">— aucun —</option>
+                    <option th:each="m : ${maitres}"
+                            th:value="${m.id}"
+                            th:text="${(m.prenom != null ? m.prenom : '') + ' ' + (m.nom != null ? m.nom : '') + ' (#'+m.id+')'}"></option>
+                </select>
+            </div>
+
+            <div>
+                <label for="create_tuteur">Tuteur enseignant</label>
+                <select id="create_tuteur">
+                    <option value="">— aucun —</option>
+                    <option th:each="t : ${tuteurs}"
+                            th:value="${t.id}"
+                            th:text="${(t.prenom != null ? t.prenom : '') + ' ' + (t.nom != null ? t.nom : '') + ' (#'+t.id+')'}"></option>
+                </select>
+            </div>
+
+            <div>
+                <label for="create_annee">Année académique</label>
+                <select id="create_annee">
+                    <option value="">— aucune —</option>
+                    <option th:each="a : ${annees}"
+                            th:value="${a.id}"
+                            th:text="${'Année #'+a.id}"></option>
+                </select>
+            </div>
+
+            <div style="grid-column:1/3">
+                <label for="create_remarques">Remarques</label>
+                <textarea id="create_remarques"></textarea>
+            </div>
+        </div>
+
+        <!-- Boutons Créer / Réinitialiser -->
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem">
+            <button class="primary" id="create_btnCreate">Créer</button>
+            <button class="muted" type="button" id="create_btnReset">Réinitialiser</button>
+        </div>
+
+        <div id="create_toastOk" class="toast ok"></div>
+        <div id="create_toastErr" class="toast err"></div>
+    </section>
+
+    <!-- SECTION 3 : AFFECTATION -->
+    <section id="tab-affect" class="section" role="tabpanel">
+        <h2 style="margin:.25rem 0 1rem">Affecter un apprenti à son maître d’apprentissage</h2>
+        <p><small class="muted">Sélectionnez un apprenti et un maître, puis cliquez sur “Affecter”.</small></p>
+
+        <div class="row">
+            <div>
+                <label for="aff_apprenti">Apprenti</label>
+                <select id="aff_apprenti">
+                    <option value="" disabled selected>— choisir un apprenti —</option>
+                    <option th:each="a : ${apprentis}"
+                            th:value="${a.id}"
+                            th:text="${a.prenom} + ' ' + ${a.nom} + ' (id=' + ${a.id} + ')'"></option>
+                </select>
+            </div>
+
+            <div>
+                <label for="aff_maitre">Maître d’apprentissage</label>
+                <select id="aff_maitre">
+                    <option value="" disabled selected>— choisir un maître —</option>
+                    <option th:each="m : ${maitres}"
+                            th:value="${m.id}"
+                            th:text="${m.prenom} + ' ' + ${m.nom} + ' (id=' + ${m.id} + ')'"></option>
+                </select>
+            </div>
+        </div>
+
+        <button id="aff_btnAffecter" class="primary">Affecter</button>
+
+        <div id="aff_toastOk" class="toast ok"></div>
+        <div id="aff_toastErr" class="toast err"></div>
+    </section>
+</div>
+
+<script>
+    // ====== Tab logic ======
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.section');
+    function showTab(id){
+        sections.forEach(s=>s.classList.toggle('active', s.id===id));
+        tabs.forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+    }
+    tabs.forEach(btn=>btn.addEventListener('click',()=>showTab(btn.dataset.tab)));
+
+    // Ouvrir l’onglet Affecter avec pré-sélection depuis le dashboard
+    document.addEventListener('click', (e)=>{
+        const t = e.target.closest('.go-affect');
+        if(!t) return;
+        const id = t.getAttribute('data-apprenti-id');
+        if(id){
+            showTab('tab-affect');
+            const sel = document.getElementById('aff_apprenti');
+            if(sel){ sel.value = id; }
+        }
+    });
+
+    // ====== Dashboard filter ======
+    const dashQ = document.getElementById('dash_q');
+    const dashTbl = document.getElementById('dash_tbl');
+    if (dashQ && dashTbl){
+        dashQ.addEventListener('input', () => {
+            const term = dashQ.value.toLowerCase().trim();
+            const rows = dashTbl.querySelectorAll('tbody tr');
+            rows.forEach(tr => {
+                const txt = tr.innerText.toLowerCase();
+                tr.style.display = txt.includes(term) ? '' : 'none';
+            });
+        });
+    }
+
+    // ====== Helpers (toasts) ======
+    function show(el, msg){ el.textContent = msg; el.style.display = 'block'; setTimeout(()=>{el.style.display='none'}, 5000); }
+
+    // ====== CREATE: form logic ======
+    const c_ok = document.getElementById('create_toastOk');
+    the_err = document.getElementById('create_toastErr');
+    const c_err = the_err; // alias safe
+    function toNullIfEmpty(v){ return v==='' ? null : v; }
+
+    const fieldMap = {
+        email: '#create_email',
+        prenom: '#create_prenom',
+        nom: '#create_nom',
+        telephone: '#create_telephone',
+        adresse: '#create_adresse',
+        etat: '#create_etat',
+        anneeLevel: '#create_anneeLevel',
+        entrepriseId: '#create_entreprise',
+        maitreId: '#create_maitre',
+        tuteurId: '#create_tuteur',
+        anneeAcademiqueId: '#create_annee'
+    };
+    function clearFieldErrors(){ Object.values(fieldMap).forEach(sel=>{ const el=document.querySelector(sel); if(el){ el.style.borderColor='#cbd5e1'; } }); }
+    function markFieldError(field){ const sel = fieldMap[field]; if(sel){ const el=document.querySelector(sel); if(el){ el.style.borderColor = '#ef4444'; } } }
+
+    document.getElementById('create_btnCreate').addEventListener('click', async () => {
+        clearFieldErrors();
+        const prenom = document.getElementById('create_prenom').value.trim();
+        const nom = document.getElementById('create_nom').value.trim();
+        const email = document.getElementById('create_email').value.trim();
+        if(!prenom || !nom || !email){ show(c_err, 'Les champs * (prénom, nom, email) sont obligatoires.'); return; }
+
+        const payload = {
+            prenom, nom, email,
+            telephone: toNullIfEmpty(document.getElementById('create_telephone').value.trim()),
+            adresse: toNullIfEmpty(document.getElementById('create_adresse').value.trim()),
+            etat: toNullIfEmpty(document.getElementById('create_etat').value),
+            anneeLevel: toNullIfEmpty(document.getElementById('create_anneeLevel').value),
+            entrepriseId: toNullIfEmpty(document.getElementById('create_entreprise').value) ? Number(document.getElementById('create_entreprise').value) : null,
+            maitreId: toNullIfEmpty(document.getElementById('create_maitre').value) ? Number(document.getElementById('create_maitre').value) : null,
+            tuteurId: toNullIfEmpty(document.getElementById('create_tuteur').value) ? Number(document.getElementById('create_tuteur').value) : null,
+            anneeAcademiqueId: toNullIfEmpty(document.getElementById('create_annee').value) ? Number(document.getElementById('create_annee').value) : null,
+            remarques: toNullIfEmpty(document.getElementById('create_remarques').value)
+        };
+
+        try{
+            const res = await fetch('/api/apprentis', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            if(res.ok || res.status === 201){
+                const dto = await res.json().catch(()=>null);
+                const label = dto ? `${dto.prenom} ${dto.nom} (#${dto.id})` : 'Apprenti';
+                show(c_ok, `✅ ${label} créé avec succès.`);
+                return;
+            }
+            const ct = res.headers.get('content-type') || '';
+            let userMessage = `Erreur ${res.status}`;
+            if (ct.includes('application/json')) {
+                const data = await res.json().catch(()=>null);
+                if (data) {
+                    if (Array.isArray(data.fieldErrors) && data.fieldErrors.length) {
+                        userMessage = data.fieldErrors.map(fe => `${fe.field} : ${fe.message}`).join('\n');
+                        data.fieldErrors.forEach(fe => markFieldError(fe.field));
+                    } else if (data.message) {
+                        userMessage = data.message;
+                    }
+                }
+            } else {
+                const text = await res.text(); userMessage = text || userMessage;
+            }
+            show(c_err, userMessage);
+        } catch(e){ show(c_err, 'Erreur réseau: ' + e.message); }
+    });
+
+    document.getElementById('create_btnReset').addEventListener('click', () => {
+        ['create_prenom','create_nom','create_email','create_telephone','create_adresse','create_remarques'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        ['create_etat','create_anneeLevel','create_entreprise','create_maitre','create_tuteur','create_annee'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        clearFieldErrors();
+    });
+
+    // ====== IMPORT CSV (en haut de l’onglet Créer) ======
+    const c_btnImport = document.getElementById('create_btnImportCsv');
+    const c_csvInput  = document.getElementById('create_csvInput');
+    const c_reportBox = document.getElementById('create_importReport');
+
+    c_btnImport.addEventListener('click', () => c_csvInput.click());
+
+    c_csvInput.addEventListener('change', async () => {
+        if (!c_csvInput.files || c_csvInput.files.length === 0) return;
+        const file = c_csvInput.files[0];
+
+        if (!file.name.toLowerCase().endsWith('.csv')) {
+            show(c_err, "Veuillez sélectionner un fichier .csv");
+            c_csvInput.value = '';
+            return;
+        }
+
+        try {
+            c_btnImport.disabled = true;
+            c_btnImport.textContent = 'Import en cours…';
+
+            const fd = new FormData();
+            fd.append('file', file);
+
+            const res = await fetch('/api/apprentis/import', { method: 'POST', body: fd });
+
+            const ct = res.headers.get('content-type') || '';
+            if (!res.ok) {
+                if (ct.includes('application/json')) {
+                    const data = await res.json().catch(()=>null);
+                    const message = data?.message || 'Erreur lors de l’import.';
+                    show(c_err, message);
+                } else {
+                    const text = await res.text();
+                    show(c_err, text || `Erreur ${res.status}`);
+                }
+                return;
+            }
+
+            const report = await res.json();
+            const { totalRows, success, failed, successes = [], errors = [] } = report || {};
+
+            // ===== Nouveau rendu lisible avec noms =====
+            const plural = (n, s, p) => `${n} ${n > 1 ? p : s}`;
+
+            const okList = successes.map(s => {
+                const fullName = [s.prenom, s.nom].filter(Boolean).join(' ').trim();
+                const who = fullName || (s.email ?? `id=${s.apprentiId ?? '?'}`);
+                return `
+                <li style="margin:.25rem 0">
+                  <span style="display:inline-block;padding:.15rem .5rem;border:1px solid #e5e7eb;border-radius:999px;background:#f3f4f6">
+                    ${who}
+                  </span>
+                  <small style="color:#6b7280;margin-left:.4rem">Ligne ${s.line}${s.email ? ` · ${s.email}` : ''}</small>
+                </li>`;
+            }).join('');
+
+            const koList = errors.map(e =>
+                `<li style="margin:.25rem 0;color:#991b1b">
+                 <b>Ligne ${e.line}</b> – ${e.message}
+               </li>`
+            ).join('');
+
+            const summary = `
+              <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:.5rem">
+                <span style="font-weight:600">Import terminé</span>
+                <span style="padding:.1rem .5rem;border:1px solid #e5e7eb;border-radius:999px;background:#fff">
+                  Total : <b>${totalRows ?? 0}</b>
+                </span>
+                <span style="padding:.1rem .5rem;border:1px solid #bbf7d0;border-radius:999px;background:#ecfdf5;color:#065f46">
+                  ${plural(success ?? 0, 'succès', 'succès')}
+                </span>
+                <span style="padding:.1rem .5rem;border:1px solid #fecaca;border-radius:999px;background:#fff1f2;color:#991b1b">
+                  ${plural(failed ?? 0, 'échec', 'échecs')}
+                </span>
+              </div>
+            `;
+
+            c_reportBox.innerHTML = `
+              ${summary}
+              ${okList ? `
+                <details open style="margin:.25rem 0">
+                  <summary style="cursor:pointer;font-weight:600">Apprentis créés</summary>
+                  <ul style="margin:.5rem 0 0 .5rem;list-style:disc">${okList}</ul>
+                </details>` : ''
+            }
+              ${koList ? `
+                <details style="margin:.25rem 0">
+                  <summary style="cursor:pointer;font-weight:600;color:#991b1b">Erreurs</summary>
+                  <ul style="margin:.5rem 0 0 .5rem;list-style:disc">${koList}</ul>
+                </details>` : ''
+            }
+            `;
+            c_reportBox.style.display = 'block';
+            show(c_ok, '✅ Import CSV terminé');
+
+        } catch (e) {
+            show(c_err, 'Erreur réseau: ' + e.message);
+        } finally {
+            c_btnImport.disabled = false;
+            c_btnImport.textContent = 'Importer CSV';
+            c_csvInput.value = ''; // reset
+        }
+    });
+
+    // ====== AFFECTATION ======
+    const a_ok = document.getElementById('aff_toastOk');
+    const a_err = document.getElementById('aff_toastErr');
+    document.getElementById('aff_btnAffecter').addEventListener('click', async () => {
+        const apprentiId = document.getElementById('aff_apprenti').value;
+        const maitreId = document.getElementById('aff_maitre').value;
+        if(!apprentiId || !maitreId){ show(a_err, 'Sélectionne un apprenti et un maître.'); return; }
+        try{
+            const res = await fetch(`/api/maitres/${maitreId}/apprentis/${apprentiId}`, { method: 'PUT' });
+            const text = await res.text();
+            if(res.ok){
+                let dto; try{ dto = JSON.parse(text); } catch(_) { dto = null; }
+                const nom = dto ? `${dto.prenom} ${dto.nom}` : `Apprenti ${apprentiId}`;
+                show(a_ok, `✅ ${nom} affecté au maître #${maitreId} avec succès.`);
+            } else {
+                show(a_err, `Erreur ${res.status} : ${text}`);
+            }
+        } catch(e){ show(a_err, `Erreur réseau : ${e.message}`); }
+    });
+</script>
+</body>
+</html>
