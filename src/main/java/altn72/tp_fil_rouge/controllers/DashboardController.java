@@ -10,6 +10,9 @@ import altn72.tp_fil_rouge.services.AnneeAcademiqueService;
 import altn72.tp_fil_rouge.services.ApprentiService;
 import altn72.tp_fil_rouge.services.TuteurEnseignantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import altn72.tp_fil_rouge.repositories.TuteurEnseignantRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,7 @@ import java.util.List;
 public class DashboardController {
 
     private final ApprentiRepository apprentiRepo;
+    private final TuteurEnseignantRepository tuteurRepo;
 
     @Autowired
     private AnneeAcademiqueService anneeAcademiqueService;
@@ -32,8 +36,9 @@ public class DashboardController {
     @Autowired
     private ApprentiService apprentiService;
 
-    public DashboardController(ApprentiRepository apprentiRepo) {
+    public DashboardController(ApprentiRepository apprentiRepo, TuteurEnseignantRepository tuteurRepo) {
         this.apprentiRepo = apprentiRepo;
+        this.tuteurRepo = tuteurRepo;
     }
 
     @GetMapping("/sans-maitre")
@@ -46,10 +51,9 @@ public class DashboardController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        Integer idTuteur = 1; // récupérer l'id du tuteur enseignant connecté
-
-        TuteurEnseignant tuteurEnseignantConnected = tuteurEnseignantService.getById(idTuteur)
-                .orElseThrow(() -> new TuteurEnseignantNotFoundException(idTuteur));
+        // récupère le TuteurEnseignant connecté via son login
+        TuteurEnseignant tuteurEnseignantConnected = tuteurRepo.findByLogin(principal.getUsername())
+                .orElseThrow(() -> new RuntimeException("Tuteur non trouvé"));
 
 
         List<Apprenti> apprentisTuteurEnseignant = tuteurEnseignantConnected.getApprentis();
@@ -67,6 +71,8 @@ public class DashboardController {
 
         model.addAttribute("apprentis", apprentisActive);
         model.addAttribute("anneeAcademique", anneeAcademique);
+        model.addAttribute("prenom", tuteurEnseignantConnected.getPrenom());
+        model.addAttribute("nom", tuteurEnseignantConnected.getNom());
         return "pages/Dashboard";
     }
 

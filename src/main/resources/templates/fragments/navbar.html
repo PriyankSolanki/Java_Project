@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="navbar">
+    <header class="header">
+        <p>
+            Bonjour, <span th:text="${prenom + ' ' + nom}"></span> !
+            <span class="separator">|</span>
+        </p>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">Déconnexion</button>
+        </form>
+    </header>
+</div>
+</body>
+</html>
