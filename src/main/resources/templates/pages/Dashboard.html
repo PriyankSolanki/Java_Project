@@ -24,7 +24,7 @@
       <td th:text="${apprenti.id}"></td>
       <td th:text="${apprenti.prenom}">-</td>
       <td th:text="${apprenti.nom}">-</td>
-      <td><a th:href="@{/apprentice/{id}(id=${apprenti.id})}">détail</a></td>
+      <td><a th:href="@{/ui/dashboard/apprentice/{id}(id=${apprenti.id})}">détail</a></td>
     </tr>
     <tr>
       <td colspan="4" class="no-apprentice" th:if="${#lists.isEmpty(apprentis)}">

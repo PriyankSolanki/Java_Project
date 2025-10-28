@@ -1,8 +1,10 @@
 <!-- fragments/navbar.html -->
 <nav th:fragment="navbar">
     <ul class="navbar">
-        <li><a th:href="@{/dashboard}">Accueil</a></li>
-        <li><a th:href="@{/search}">Recherche</a></li>
-        <li><a th:href="@{/logout}">Déconnexion (ne marche pas)</a></li>
+        <li><a th:href="@{/ui/dashboard/dashboard}">Accueil</a></li>
+        <li><a th:href="@{/ui/dashboard/search}">Recherche</a></li>
+        <li><form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">Déconnexion</button>
+        </form></li>
     </ul>
 </nav>
