@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gestion entreprises</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- CSRF (Spring Security) -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <style>
+        :root { --b:#e5e7eb; --txt:#111827; --muted:#6b7280; }
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;color:var(--txt)}
+        .card{max-width:1000px;margin:auto;padding:1.25rem;border:1px solid var(--b);border-radius:14px;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+        h1{margin:.25rem 0 .75rem}
+        .muted{color:var(--muted)}
+        .tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+        .tab-btn{padding:.5rem .8rem;border:1px solid var(--b);border-radius:10px;background:#fff;cursor:pointer}
+        .tab-btn.active{background:#111827;color:#fff;border-color:#111827}
+        .section{display:none}
+        .section.active{display:block}
+        .toolbar{display:flex;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+        input[type=search]{width:320px;max-width:100%;padding:.6rem .8rem;border:1px solid var(--b);border-radius:10px}
+        table{width:100%;border-collapse:collapse;border:1px solid var(--b);border-radius:12px;overflow:hidden}
+        th,td{padding:.65rem .8rem;border-bottom:1px solid var(--b);text-align:left}
+        th{background:#f9fafb;font-weight:600}
+        tr:hover{background:#fcfcfd}
+        label{display:block;margin:.5rem 0 .25rem;font-weight:600}
+        input,textarea,button{width:100%;padding:.6rem;border:1px solid #cbd5e1;border-radius:10px}
+        textarea{min-height:80px}
+        .primary{margin-top:.6rem;background:#111827;color:#fff;border-color:#111827;cursor:pointer}
+        .ghost{margin-top:.6rem;background:#f9fafb}
+        .toast{margin-top:1rem;padding:.75rem;border-radius:10px;display:none}
+        .ok{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
+        .err{background:#fff1f2;border:1px solid #f43f5e;color:#991b1b;white-space:pre-wrap}
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Gestion des entreprises</h1>
+    <p class="muted" style="margin-top:-.25rem">Liste des entreprises et création d’une nouvelle fiche.</p>
+
+    <!-- Onglets -->
+    <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="tab-list" role="tab" aria-controls="tab-list">Liste</button>
+        <button class="tab-btn" data-tab="tab-create" role="tab" aria-controls="tab-create">Créer une entreprise</button>
+    </div>
+
+    <!-- LISTE -->
+    <section id="tab-list" class="section active" role="tabpanel">
+        <div class="toolbar">
+            <h2 style="margin:.25rem 0">Entreprises</h2>
+            <input id="q" type="search" placeholder="Rechercher (raison sociale, adresse)…">
+        </div>
+
+        <div id="empty" class="muted" style="display:none;border:1px dashed var(--b);border-radius:10px;padding:1rem">
+            Aucune entreprise pour le moment.
+        </div>
+
+        <table id="tbl" style="display:none">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Raison sociale</th>
+                <th>Adresse</th>
+                <th>Infos d’accès</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <!-- CREATION -->
+    <section id="tab-create" class="section" role="tabpanel">
+        <h2 style="margin:.25rem 0 .5rem">Créer une entreprise</h2>
+        <p><small class="muted">Les champs marqués * sont obligatoires.</small></p>
+
+        <div>
+            <label for="raison">Raison sociale *</label>
+            <input id="raison" placeholder="Ex: ACME SAS">
+        </div>
+        <div>
+            <label for="adresse">Adresse</label>
+            <textarea id="adresse" placeholder="Numéro, rue, ville…"></textarea>
+        </div>
+        <div>
+            <label for="infos">Infos d’accès</label>
+            <textarea id="infos" placeholder="Badge, étage, instructions…"></textarea>
+        </div>
+
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+            <button id="btnSave" class="primary">Enregistrer</button>
+            <button id="btnReset" class="ghost" type="button">Réinitialiser</button>
+        </div>
+
+        <div id="ok" class="toast ok"></div>
+        <div id="err" class="toast err"></div>
+    </section>
+</div>
+
+<script>
+    // ===== CSRF =====
+    const CSRF_TOKEN  = document.querySelector('meta[name="_csrf"]')?.content;
+    const CSRF_HEADER = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
+    const withCsrf = (h={}) => Object.assign({}, h, CSRF_TOKEN ? { [CSRF_HEADER]: CSRF_TOKEN } : {});
+
+    // ===== Tabs =====
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.section');
+    function showTab(id){
+        sections.forEach(s=>s.classList.toggle('active', s.id===id));
+        tabs.forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+        if(id==='tab-list') loadList();
+    }
+    tabs.forEach(btn=>btn.addEventListener('click',()=>showTab(btn.dataset.tab)));
+
+    // ===== Toast helpers =====
+    const ok = document.getElementById('ok');
+    const err = document.getElementById('err');
+    function show(node, msg){ node.textContent = msg; node.style.display='block'; setTimeout(()=>node.style.display='none', 5000); }
+
+    // ===== Création =====
+    document.getElementById('btnSave').addEventListener('click', async () => {
+        const raison = document.getElementById('raison').value.trim();
+        const adresse = document.getElementById('adresse').value.trim();
+        const infos   = document.getElementById('infos').value.trim();
+
+        if(!raison){ show(err, 'La raison sociale est obligatoire.'); return; }
+
+        try{
+            const res = await fetch('/api/entreprises', {
+                method: 'POST',
+                headers: withCsrf({'Content-Type':'application/json'}),
+                body: JSON.stringify({
+                    raisonSociale: raison,
+                    adresse: adresse || null,
+                    infosAcces: infos || null
+                })
+            });
+
+            if(res.ok || res.status===201){
+                const dto = await res.json().catch(()=>null);
+                show(ok, `Entreprise créée${dto?.id ? ' (#'+dto.id+')' : ''}.`);
+                document.getElementById('raison').value='';
+                document.getElementById('adresse').value='';
+                document.getElementById('infos').value='';
+                loadList(); // rafraîchit la liste
+            } else {
+                const txt = await res.text();
+                show(err, `Erreur ${res.status} : ${txt || 'création impossible'}`);
+            }
+        }catch(e){
+            show(err, 'Erreur réseau : ' + e.message);
+        }
+    });
+
+    document.getElementById('btnReset').addEventListener('click',()=>{
+        ['raison','adresse','infos'].forEach(id=>document.getElementById(id).value='');
+    });
+
+    // ===== Liste =====
+    const q = document.getElementById('q');
+    const tbl = document.getElementById('tbl');
+    const tbody = tbl.querySelector('tbody');
+    const empty = document.getElementById('empty');
+
+    async function loadList(){
+        try{
+            const res = await fetch('/api/entreprises', { headers: withCsrf() });
+            if(!res.ok){ tbl.style.display='none'; empty.style.display='block'; return; }
+            const data = await res.json();
+            renderList(data || []);
+        }catch(_){
+            tbl.style.display='none'; empty.style.display='block';
+        }
+    }
+
+    function renderList(rows){
+        tbody.innerHTML = rows.map(e => `
+      <tr>
+        <td>${e.id ?? ''}</td>
+        <td>${escapeHtml(e.raisonSociale ?? '')}</td>
+        <td>${escapeHtml(e.adresse ?? '—')}</td>
+        <td>${escapeHtml(e.infosAcces ?? '—')}</td>
+      </tr>
+    `).join('');
+        const has = rows.length>0;
+        tbl.style.display = has ? 'table' : 'none';
+        empty.style.display = has ? 'none' : 'block';
+        applyFilter();
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m])); }
+
+    q.addEventListener('input', applyFilter);
+    function applyFilter(){
+        const term = q.value.toLowerCase().trim();
+        Array.from(tbody.querySelectorAll('tr')).forEach(tr=>{
+            tr.style.display = tr.innerText.toLowerCase().includes(term) ? '' : 'none';
+        });
+    }
+
+    // Première charge
+    loadList();
+</script>
+</body>
+</html>
