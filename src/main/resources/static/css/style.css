@@ -179,3 +179,121 @@ input:focus {
         gap: 0.5rem;
     }
 }
+
+
+/* --- NAVBAR STYLE --- */
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #007BFF 0%, #0056D2 100%);
+    padding: 12px 32px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.navbar-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s ease;
+}
+.navbar-logo:hover {
+    transform: scale(1.05);
+}
+
+.navbar-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    padding: 4px 0;
+    transition: color 0.3s ease;
+}
+
+.navbar-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease;
+}
+
+.navbar-links a:hover {
+    color: #DDE8FF;
+}
+
+.navbar-links a:hover::after {
+    width: 100%;
+}
+
+/* --- RIGHT SECTION --- */
+.logout-form {
+    margin: 0;
+}
+
+.logout-btn {
+    background-color: #fff;
+    color: #007BFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.logout-btn:hover {
+    background-color: #E6EEFF;
+    transform: translateY(-1px);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .navbar-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+    }
+
+    .navbar-links {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .navbar-links li {
+        width: 100%;
+    }
+
+    .navbar-links a {
+        display: block;
+        width: 100%;
+        padding: 8px 0;
+    }
+
+    .navbar-right {
+        margin-top: 12px;
+        width: 100%;
+        text-align: right;
+    }
+}

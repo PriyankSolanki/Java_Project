@@ -1,10 +1,18 @@
 <!-- fragments/navbar.html -->
-<nav th:fragment="navbar">
-    <ul class="navbar">
-        <li><a th:href="@{/ui/dashboard/dashboard}">Accueil</a></li>
-        <li><a th:href="@{/ui/dashboard/search}">Recherche</a></li>
-        <li><form th:action="@{/logout}" method="post">
+<nav th:fragment="navbar" class="navbar-container">
+    <div class="navbar-left">
+        <a th:href="@{/ui/dashboard/dashboard}" class="navbar-logo">CVMI</a>
+        <ul class="navbar-links">
+            <li><a th:href="@{/ui/dashboard/dashboard}">Accueil</a></li>
+            <li><a th:href="@{/ui/dashboard/search}">Recherche</a></li>
+        </ul>
+    </div>
+    <div class="navbar-right">
+        <form th:action="@{/logout}" method="post" class="logout-form">
             <button type="submit" class="logout-btn">Déconnexion</button>
-        </form></li>
-    </ul>
+        </form>
+    </div>
 </nav>
+
+<style>
+</style>
