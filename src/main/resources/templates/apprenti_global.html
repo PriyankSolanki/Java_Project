@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <title>Gestion apprentis</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <style>
         :root { --b:#e5e7eb; --txt:#111827; --muted:#6b7280; --alert:#dc2626; }
         body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;color:var(--txt)}
@@ -15,8 +19,6 @@
         .tab-btn.active{background:#111827;color:#fff;border-color:#111827}
         .section{display:none}
         .section.active{display:block}
-
-        /* Table / Toolbar (dashboard) */
         .toolbar{display:flex;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:.5rem}
         input[type=search]{width:340px;max-width:100%;padding:.6rem .8rem;border:1px solid var(--b);border-radius:10px}
         table{width:100%;border-collapse:collapse;border:1px solid var(--b);border-radius:12px;overflow:hidden}
@@ -28,8 +30,6 @@
         .empty{padding:1rem;border:1px dashed var(--b);border-radius:12px;text-align:center}
         small{color:var(--muted)}
         .total-alert{color:var(--alert);font-weight:700;font-size:1.25rem}
-
-        /* Forms (création & affectation) */
         label{display:block;margin:.5rem 0 .25rem;font-weight:600}
         select,button,input,textarea{width:100%;padding:.6rem;border:1px solid #cbd5e1;border-radius:10px}
         button.primary{margin-top:1rem;cursor:pointer;background:#111827;color:#fff;border-color:#111827}
@@ -40,18 +40,29 @@
         .toast{margin-top:1rem;padding:.75rem;border-radius:10px;display:none}
         .ok{background:#ecfdf5;border:1px solid #34d399;color:#065f46}
         .err{background:#fff1f2;border:1px solid #f43f5e;color:#991b1b;white-space:pre-wrap}
+        .chip{display:inline-block;padding:.1rem .5rem;border:1px solid #e5e7eb;border-radius:999px;background:#f3f4f6}
+        .total-ok {
+            color: #16a34a; /* vert (équivaut à Tailwind text-green-600) */
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .total-alert {
+            color: #dc2626; /* rouge */
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
     </style>
 </head>
 <body>
 <div class="card">
     <h1>Gestion des apprentis</h1>
-    <p class="muted" style="margin-top:-.25rem">Tableau des apprentis sans maître d'apprentissage, création d'un apprenti, et affectation</p>
+    <p class="muted" style="margin-top:-.25rem">Tableau des apprentis sans maître d'apprentissage, création d'un apprenti, import CSV et affectation</p>
 
     <!-- Onglets -->
     <div class="tabs" role="tablist">
         <button class="tab-btn active" data-tab="tab-dashboard" role="tab" aria-controls="tab-dashboard">Apprentis sans maître d'apprentissage</button>
         <button class="tab-btn" data-tab="tab-create" role="tab" aria-controls="tab-create">Créer un apprenti</button>
-        <button class="tab-btn" data-tab="tab-affect" role="tab" aria-controls="tab-affect">Affecter un apprenti à un maitre d'apprentissage</button>
+        <button class="tab-btn" data-tab="tab-affect" role="tab" aria-controls="tab-affect">Affecter un apprenti</button>
     </div>
 
     <!-- SECTION 1 : DASHBOARD SANS MAÎTRE -->
@@ -59,7 +70,9 @@
         <div class="toolbar">
             <div>
                 <h2 style="margin:.25rem 0">Apprentis sans maître d’apprentissage</h2>
-                <span class="total-alert" th:text="'Total : ' + ${total}"></span>
+                <span th:classappend="${total == 0} ? ' total-ok' : ' total-alert'"
+                      th:text="'Total : ' + ${total}">
+                </span>
             </div>
             <input id="dash_q" type="search" placeholder="Rechercher (nom, email, entreprise, année)…">
         </div>
@@ -116,7 +129,7 @@
              class="toast"
              style="display:none;margin-top:.2rem;border:1px solid #e5e7eb;border-radius:10px;padding:.8rem;background:#f9fafb"></div>
 
-        <!-- Formulaire de création -->
+        <!-- Formulaire de création (tous les champs) -->
         <div class="grid" style="margin-top:1rem">
             <div>
                 <label for="create_prenom">Prénom *</label>
@@ -250,7 +263,14 @@
 </div>
 
 <script>
-    // ====== Tab logic ======
+    // ====== CSRF helper ======
+    const CSRF_TOKEN  = document.querySelector('meta[name="_csrf"]')?.content;
+    const CSRF_HEADER = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
+    function withCsrf(headers = {}) {
+        return Object.assign({}, headers, CSRF_TOKEN ? { [CSRF_HEADER]: CSRF_TOKEN } : {});
+    }
+
+    // ====== Tabs ======
     const tabs = document.querySelectorAll('.tab-btn');
     const sections = document.querySelectorAll('.section');
     function showTab(id){
@@ -285,13 +305,8 @@
         });
     }
 
-    // ====== Helpers (toasts) ======
-    function show(el, msg){ el.textContent = msg; el.style.display = 'block'; setTimeout(()=>{el.style.display='none'}, 5000); }
-
-    // ====== CREATE: form logic ======
-    const c_ok = document.getElementById('create_toastOk');
-    the_err = document.getElementById('create_toastErr');
-    const c_err = the_err; // alias safe
+    // ====== Helpers (toasts & champs) ======
+    function show(el, msg){ el.textContent = msg; el.style.display = 'block'; setTimeout(()=>{el.style.display='none'}, 6000); }
     function toNullIfEmpty(v){ return v==='' ? null : v; }
 
     const fieldMap = {
@@ -305,10 +320,15 @@
         entrepriseId: '#create_entreprise',
         maitreId: '#create_maitre',
         tuteurId: '#create_tuteur',
-        anneeAcademiqueId: '#create_annee'
+        anneeAcademiqueId: '#create_annee',
+        remarques: '#create_remarques'
     };
     function clearFieldErrors(){ Object.values(fieldMap).forEach(sel=>{ const el=document.querySelector(sel); if(el){ el.style.borderColor='#cbd5e1'; } }); }
     function markFieldError(field){ const sel = fieldMap[field]; if(sel){ const el=document.querySelector(sel); if(el){ el.style.borderColor = '#ef4444'; } } }
+
+    // ====== CREATE: form logic ======
+    const c_ok = document.getElementById('create_toastOk');
+    const c_err = document.getElementById('create_toastErr');
 
     document.getElementById('create_btnCreate').addEventListener('click', async () => {
         clearFieldErrors();
@@ -331,13 +351,19 @@
         };
 
         try{
-            const res = await fetch('/api/apprentis', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+            const res = await fetch('/api/apprentis', {
+                method:'POST',
+                headers: withCsrf({'Content-Type':'application/json'}),
+                body: JSON.stringify(payload)
+            });
+
             if(res.ok || res.status === 201){
                 const dto = await res.json().catch(()=>null);
                 const label = dto ? `${dto.prenom} ${dto.nom} (#${dto.id})` : 'Apprenti';
-                show(c_ok, `✅ ${label} créé avec succès.`);
+                show(c_ok, `${label} créé avec succès.`);
                 return;
             }
+
             const ct = res.headers.get('content-type') || '';
             let userMessage = `Erreur ${res.status}`;
             if (ct.includes('application/json')) {
@@ -358,12 +384,14 @@
     });
 
     document.getElementById('create_btnReset').addEventListener('click', () => {
-        ['create_prenom','create_nom','create_email','create_telephone','create_adresse','create_remarques'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-        ['create_etat','create_anneeLevel','create_entreprise','create_maitre','create_tuteur','create_annee'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        ['create_prenom','create_nom','create_email','create_telephone','create_adresse','create_remarques']
+            .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        ['create_etat','create_anneeLevel','create_entreprise','create_maitre','create_tuteur','create_annee']
+            .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
         clearFieldErrors();
     });
 
-    // ====== IMPORT CSV (en haut de l’onglet Créer) ======
+    // ====== IMPORT CSV ======
     const c_btnImport = document.getElementById('create_btnImportCsv');
     const c_csvInput  = document.getElementById('create_csvInput');
     const c_reportBox = document.getElementById('create_importReport');
@@ -387,7 +415,11 @@
             const fd = new FormData();
             fd.append('file', file);
 
-            const res = await fetch('/api/apprentis/import', { method: 'POST', body: fd });
+            const res = await fetch('/api/apprentis/import', {
+                method: 'POST',
+                headers: withCsrf(), // ne pas fixer Content-Type avec FormData
+                body: fd
+            });
 
             const ct = res.headers.get('content-type') || '';
             if (!res.ok) {
@@ -405,59 +437,54 @@
             const report = await res.json();
             const { totalRows, success, failed, successes = [], errors = [] } = report || {};
 
-            // ===== Nouveau rendu lisible avec noms =====
             const plural = (n, s, p) => `${n} ${n > 1 ? p : s}`;
 
             const okList = successes.map(s => {
                 const fullName = [s.prenom, s.nom].filter(Boolean).join(' ').trim();
                 const who = fullName || (s.email ?? `id=${s.apprentiId ?? '?'}`);
                 return `
-                <li style="margin:.25rem 0">
-                  <span style="display:inline-block;padding:.15rem .5rem;border:1px solid #e5e7eb;border-radius:999px;background:#f3f4f6">
-                    ${who}
-                  </span>
-                  <small style="color:#6b7280;margin-left:.4rem">Ligne ${s.line}${s.email ? ` · ${s.email}` : ''}</small>
-                </li>`;
+          <li style="margin:.25rem 0">
+            <span class="chip">${who}</span>
+            <small style="color:#6b7280;margin-left:.4rem">Ligne ${s.line}${s.email ? ` · ${s.email}` : ''}</small>
+          </li>`;
             }).join('');
 
             const koList = errors.map(e =>
                 `<li style="margin:.25rem 0;color:#991b1b">
-                 <b>Ligne ${e.line}</b> – ${e.message}
-               </li>`
+           <b>Ligne ${e.line}</b> – ${e.message}
+         </li>`
             ).join('');
 
             const summary = `
-              <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:.5rem">
-                <span style="font-weight:600">Import terminé</span>
-                <span style="padding:.1rem .5rem;border:1px solid #e5e7eb;border-radius:999px;background:#fff">
-                  Total : <b>${totalRows ?? 0}</b>
-                </span>
-                <span style="padding:.1rem .5rem;border:1px solid #bbf7d0;border-radius:999px;background:#ecfdf5;color:#065f46">
-                  ${plural(success ?? 0, 'succès', 'succès')}
-                </span>
-                <span style="padding:.1rem .5rem;border:1px solid #fecaca;border-radius:999px;background:#fff1f2;color:#991b1b">
-                  ${plural(failed ?? 0, 'échec', 'échecs')}
-                </span>
-              </div>
-            `;
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:.5rem">
+          <span style="font-weight:600">Import terminé</span>
+          <span class="chip">Total : <b>${totalRows ?? 0}</b></span>
+          <span class="chip" style="border-color:#bbf7d0;background:#ecfdf5;color:#065f46">
+            ${plural(success ?? 0, 'succès', 'succès')}
+          </span>
+          <span class="chip" style="border-color:#fecaca;background:#fff1f2;color:#991b1b">
+            ${plural(failed ?? 0, 'échec', 'échecs')}
+          </span>
+        </div>
+      `;
 
             c_reportBox.innerHTML = `
-              ${summary}
-              ${okList ? `
-                <details open style="margin:.25rem 0">
-                  <summary style="cursor:pointer;font-weight:600">Apprentis créés</summary>
-                  <ul style="margin:.5rem 0 0 .5rem;list-style:disc">${okList}</ul>
-                </details>` : ''
+        ${summary}
+        ${okList ? `
+          <details open style="margin:.25rem 0">
+            <summary style="cursor:pointer;font-weight:600">Apprentis créés</summary>
+            <ul style="margin:.5rem 0 0 .5rem;list-style:disc">${okList}</ul>
+          </details>` : ''
             }
-              ${koList ? `
-                <details style="margin:.25rem 0">
-                  <summary style="cursor:pointer;font-weight:600;color:#991b1b">Erreurs</summary>
-                  <ul style="margin:.5rem 0 0 .5rem;list-style:disc">${koList}</ul>
-                </details>` : ''
+        ${koList ? `
+          <details style="margin:.25rem 0">
+            <summary style="cursor:pointer;font-weight:600;color:#991b1b">Erreurs</summary>
+            <ul style="margin:.5rem 0 0 .5rem;list-style:disc">${koList}</ul>
+          </details>` : ''
             }
-            `;
+      `;
             c_reportBox.style.display = 'block';
-            show(c_ok, '✅ Import CSV terminé');
+            show(c_ok, 'Import CSV terminé');
 
         } catch (e) {
             show(c_err, 'Erreur réseau: ' + e.message);
@@ -476,12 +503,15 @@
         const maitreId = document.getElementById('aff_maitre').value;
         if(!apprentiId || !maitreId){ show(a_err, 'Sélectionne un apprenti et un maître.'); return; }
         try{
-            const res = await fetch(`/api/maitres/${maitreId}/apprentis/${apprentiId}`, { method: 'PUT' });
+            const res = await fetch(`/api/maitres/${maitreId}/apprentis/${apprentiId}`, {
+                method: 'PUT',
+                headers: withCsrf()
+            });
             const text = await res.text();
             if(res.ok){
                 let dto; try{ dto = JSON.parse(text); } catch(_) { dto = null; }
                 const nom = dto ? `${dto.prenom} ${dto.nom}` : `Apprenti ${apprentiId}`;
-                show(a_ok, `✅ ${nom} affecté au maître #${maitreId} avec succès.`);
+                show(a_ok, `${nom} affecté au maître #${maitreId} avec succès.`);
             } else {
                 show(a_err, `Erreur ${res.status} : ${text}`);
             }
