@@ -16,7 +16,7 @@ public class EvaluationEcole {
     private double noteFinale;
     private String commentaires;
 
-    @OneToOne
+    @OneToOne(mappedBy = "evaluationEcole")
     private Apprenti apprenti;
 
 

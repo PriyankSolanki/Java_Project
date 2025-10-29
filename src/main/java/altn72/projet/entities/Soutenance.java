@@ -19,7 +19,7 @@ public class Soutenance {
     private double noteFinale;
     private String commentaires;
 
-    @OneToOne
+    @OneToOne(mappedBy = "soutenance")
     private Apprenti apprenti;
 
 
