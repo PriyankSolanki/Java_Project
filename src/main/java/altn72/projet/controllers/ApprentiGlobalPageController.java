@@ -37,6 +37,6 @@ public class ApprentiGlobalPageController {
         model.addAttribute("tuteurs", tuteurRepo.findAll());
         model.addAttribute("entreprises", entrepriseRepo.findAll());
         model.addAttribute("annees", anneeRepo.findAll());
-        return "apprenti_global";
+        return "pages/apprenti_global";
     }
 }
