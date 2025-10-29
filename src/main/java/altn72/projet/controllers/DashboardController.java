@@ -45,13 +45,7 @@ public class DashboardController {
         TuteurEnseignant tuteurEnseignantConnected = tuteurRepo.findByLogin(principal.getUsername())
                 .orElseThrow(() -> new RuntimeException("Tuteur non trouvé"));
 
-
-        List<Apprenti> apprentisTuteurEnseignant = tuteurEnseignantConnected.getApprentis();
-
-        List<Apprenti> apprentisActive = apprentisTuteurEnseignant.stream()
-                .filter(apprenti -> apprenti.getAnneeAcademique().isActive())
-                .filter(apprenti -> Objects.equals(apprenti.getEtat(), "ACTIF"))
-                .toList();
+        List<Apprenti> apprentisActive = apprentiService.getApprentisActifs();
 
         List<AnneeAcademique> anneeAcademiques = anneeAcademiqueService.getAll();
 

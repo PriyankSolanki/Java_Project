@@ -30,4 +30,8 @@ public class ApprentiService {
         }
         return apprentiRepository.search(name, enterprise, promotion, keywords);
     }
+
+    public List<Apprenti> getApprentisActifs() {
+        return apprentiRepository.getApprentisActifs();
+    }
 }
