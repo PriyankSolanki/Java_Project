@@ -61,9 +61,10 @@
         </section>
 
         <!-- SECTION 4 : Évaluation école -->
-        <section class="info-section evaluation" th:if="${apprenti.evaluationEcole != null}">
+        <section class="info-section evaluation">
             <h2>Évaluation de l'école</h2>
             <div class="info-grid">
+                <input type="hidden" th:field="*{evaluationEcole.id}"/>
                 <div><span>Thème</span><input th:field="*{evaluationEcole.theme}" type="text"/></div>
                 <div><span>Note</span><input th:field="*{evaluationEcole.noteFinale}" type="number" step="0.1"/></div>
                 <div class="full"><span>Commentaire</span><textarea rows="5" cols="100" th:field="*{evaluationEcole.commentaires}"></textarea></div>
@@ -71,9 +72,10 @@
         </section>
 
         <!-- SECTION 5 : Soutenance -->
-        <section class="info-section soutenance" th:if="${apprenti.soutenance != null}">
+        <section class="info-section soutenance">
             <h2>Soutenance</h2>
             <div class="info-grid">
+                <input type="hidden" th:field="*{soutenance.id}"/>
                 <div><span>Date</span><input th:field="*{soutenance.date}" type="date"/></div>
                 <div><span>Note</span><input th:field="*{soutenance.noteFinale}" type="number" step="0.1"/></div>
                 <div class="full"><span>Commentaire</span><textarea rows="5" cols="100" th:field="*{soutenance.commentaires}"></textarea></div>
@@ -81,7 +83,7 @@
         </section>
 
         <!-- SECTION 6 : Mission -->
-        <section class="info-section mission" th:if="${apprenti.mission != null}">
+        <section class="info-section mission">
             <h2>Mission</h2>
             <div class="info-grid">
                 <div><span>Mots clés</span><input th:field="*{mission.motsCles}" type="text"/></div>
