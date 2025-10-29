@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>altn72</groupId>
-    <artifactId>TP_fil_rouge</artifactId>
+    <artifactId>Projet_JAVA</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>TP_fil_rouge</name>
     <description>TP_fil_rouge</description>

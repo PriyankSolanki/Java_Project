@@ -1,0 +1,201 @@
+package altn72.projet.services;
+
+
+import altn72.projet.repositories.*;
+import altn72.projet.entities.*;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+
+@Component
+public class DataInitializer implements CommandLineRunner {
+
+    private final TuteurEnseignantRepository tuteurRepo;
+    private final ApprentiRepository apprentiRepo;
+    private final EntrepriseRepository entrepriseRepo;
+    private final MaitreApprentissageRepository maitreRepo;
+    private final AnneeAcademiqueRepository anneeRepo;
+    private final VisiteRepository visiteRepo;
+    private final EvaluationEcoleRepository evalRepo;
+    private final SoutenanceRepository soutenanceRepo;
+    private final TuteurService tuteurService;
+
+    public DataInitializer(TuteurEnseignantRepository tuteurRepo,
+                           ApprentiRepository apprentiRepo,
+                           EntrepriseRepository entrepriseRepo,
+                           MaitreApprentissageRepository maitreRepo,
+                           AnneeAcademiqueRepository anneeRepo,
+                           VisiteRepository visiteRepo,
+                           EvaluationEcoleRepository evalRepo,
+                           SoutenanceRepository soutenanceRepo,TuteurService tuteurService) {
+        this.tuteurRepo = tuteurRepo;
+        this.apprentiRepo = apprentiRepo;
+        this.entrepriseRepo = entrepriseRepo;
+        this.maitreRepo = maitreRepo;
+        this.anneeRepo = anneeRepo;
+        this.visiteRepo = visiteRepo;
+        this.evalRepo = evalRepo;
+        this.soutenanceRepo = soutenanceRepo;
+        this.tuteurService=tuteurService;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+
+        // --- Check si la base est vide ---
+        if (tuteurRepo.count() > 0) {
+            System.out.println("Base déjà initialisée, aucune action effectuée.");
+            System.out.println("Tuteur initialisé : admin123 / 000000");
+            return;
+        }
+
+            TuteurEnseignant t = new TuteurEnseignant();
+            t.setPrenom("admin");
+            t.setNom("admin");
+            t.setLogin("admin123");
+            t.setMotDePasse("000000");
+            tuteurService.saveTuteur(t);
+            System.out.println("Tuteur initialisé : admin123 / 000000");
+
+
+        // --- Création d'années académiques ---
+        AnneeAcademique annee2025 = new AnneeAcademique();
+        annee2025.setAnnee("2025-2026");
+        annee2025.setActive(true);
+        anneeRepo.save(annee2025);
+
+        AnneeAcademique annee2024 = new AnneeAcademique();
+        annee2024.setAnnee("2024-2025");
+        annee2024.setActive(false);
+        anneeRepo.save(annee2024);
+
+        // --- Création d'un tuteur enseignant ---
+        TuteurEnseignant tuteur = new TuteurEnseignant();
+        tuteur.setPrenom("Jacques");
+        tuteur.setNom("Augustin");
+        tuteur.setLogin("jaugustin");
+        tuteur.setMotDePasse("password123");
+        tuteur.setEmail("jacques.augustin@efrei.fr");
+        tuteurRepo.save(tuteur);
+
+        // --- Création d'entreprises ---
+        Entreprise entreprise1 = new Entreprise();
+        entreprise1.setRaisonSociale("TechCorp");
+        entreprise1.setAdresse("10 rue de Paris, 75001 Paris");
+        entreprise1.setInfosAcces("Badge requis, 2ème étage");
+        entrepriseRepo.save(entreprise1);
+
+        Entreprise entreprise2 = new Entreprise();
+        entreprise2.setRaisonSociale("Innovatech");
+        entreprise2.setAdresse("20 avenue des Champs, 75008 Paris");
+        entreprise2.setInfosAcces("Badge requis, 3ème étage");
+        entrepriseRepo.save(entreprise2);
+
+        // --- Création de maîtres d'apprentissage ---
+        MaitreApprentissage maitre1 = new MaitreApprentissage();
+        maitre1.setNom("Durand");
+        maitre1.setPrenom("Paul");
+        maitre1.setEmail("p.durand@techcorp.com");
+        maitre1.setTelephone("0612345678");
+        maitre1.setPoste("Responsable DevOps");
+        maitreRepo.save(maitre1);
+
+        MaitreApprentissage maitre2 = new MaitreApprentissage();
+        maitre2.setNom("Martin");
+        maitre2.setPrenom("Claire");
+        maitre2.setEmail("c.martin@innovatech.com");
+        maitre2.setTelephone("0698765432");
+        maitre2.setPoste("Chef de projet");
+        maitreRepo.save(maitre2);
+
+        // --- Création d'apprentis ---
+        Apprenti apprenti1 = new Apprenti();
+        apprenti1.setNom("Leclerc");
+        apprenti1.setPrenom("Sophie");
+        apprenti1.setEmail("s.leclerc@mail.com");
+        apprenti1.setTelephone("0611223344");
+        apprenti1.setAdresse("5 rue Victor Hugo, 75005 Paris");
+        apprenti1.setEntreprise(entreprise1);
+        apprenti1.setMaitreApprentissage(maitre1);
+        apprenti1.setTuteurEnseignant(tuteur);
+        apprenti1.setAnneeAcademique(annee2025);
+        apprenti1.setEtat("ACTIF");
+
+        Mission mission1 = new Mission();
+        mission1.setMotsCles("DevOps, CI/CD");
+        mission1.setMetierCible("Ingénieur DevOps");
+        mission1.setCommentaires("Mission très intéressante");
+        apprenti1.setMission(mission1);
+
+        apprentiRepo.save(apprenti1);
+
+        Apprenti apprenti2 = new Apprenti();
+        apprenti2.setNom("Dubois");
+        apprenti2.setPrenom("Lucas");
+        apprenti2.setEmail("l.dubois@mail.com");
+        apprenti2.setTelephone("0622334455");
+        apprenti2.setAdresse("12 avenue de la République, 75011 Paris");
+        apprenti2.setEntreprise(entreprise2);
+        apprenti2.setMaitreApprentissage(maitre2);
+        apprenti2.setTuteurEnseignant(tuteur);
+        apprenti2.setAnneeAcademique(annee2025);
+        apprenti2.setEtat("ACTIF");
+
+        Mission mission2 = new Mission();
+        mission2.setMotsCles("Node.js, Angular");
+        mission2.setMetierCible("Développeur Fullstack");
+        mission2.setCommentaires("Travail sur projet interne");
+        apprenti2.setMission(mission2);
+
+        apprentiRepo.save(apprenti2);
+
+        // --- Création de visites ---
+        Visite visite1 = new Visite();
+        visite1.setApprenti(apprenti1);
+        visite1.setDate(LocalDate.of(2025, 10, 5));
+        visite1.setFormat("Présentiel");
+        visite1.setCommentaires("Très bonne progression");
+        visiteRepo.save(visite1);
+
+        Visite visite2 = new Visite();
+        visite2.setApprenti(apprenti2);
+        visite2.setDate(LocalDate.of(2025, 10, 6));
+        visite2.setFormat("Visio");
+        visite2.setCommentaires("Besoin d'accompagnement supplémentaire");
+        visiteRepo.save(visite2);
+
+        // --- Création d'évaluations école ---
+        EvaluationEcole eval1 = new EvaluationEcole();
+        eval1.setApprenti(apprenti1);
+        eval1.setTheme("Rapport DevOps");
+        eval1.setNoteFinale(16.5);
+        eval1.setCommentaires("Excellent travail, bonne méthodologie");
+        evalRepo.save(eval1);
+
+        EvaluationEcole eval2 = new EvaluationEcole();
+        eval2.setApprenti(apprenti2);
+        eval2.setTheme("Projet Node.js");
+        eval2.setNoteFinale(14.0);
+        eval2.setCommentaires("Travail correct mais à améliorer");
+        evalRepo.save(eval2);
+
+        // --- Création de soutenances ---
+        Soutenance soutenance1 = new Soutenance();
+        soutenance1.setApprenti(apprenti1);
+        soutenance1.setDate(LocalDate.of(2025, 11, 20));
+        soutenance1.setNoteFinale(17.0);
+        soutenance1.setCommentaires("Présentation claire et structurée");
+        soutenanceRepo.save(soutenance1);
+
+        Soutenance soutenance2 = new Soutenance();
+        soutenance2.setApprenti(apprenti2);
+        soutenance2.setDate(LocalDate.of(2025, 11, 22));
+        soutenance2.setNoteFinale(15.0);
+        soutenance2.setCommentaires("Bonne présentation mais manque de détails techniques");
+        soutenanceRepo.save(soutenance2);
+
+        System.out.println("Base de données initialisée avec succès !");
+    }
+}
