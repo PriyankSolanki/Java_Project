@@ -18,7 +18,7 @@ public class AnneeAcademiqueController {
     @GetMapping("/annees")
     public String listeAnnees(Model model) {
         model.addAttribute("annees", anneeAcademiqueService.getAll());
-        return "annee/liste"; // ton template HTML (ex: src/main/resources/templates/annee/liste.html)
+        return "annee/liste";
     }
 
     @PostMapping("/annees/creer")
