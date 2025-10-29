@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier l'apprenti</title>
+    <link rel="stylesheet" th:href="@{/css/apprentiInfos.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/editApprenti.css}">
+</head>
+<body>
+<div th:replace="partials/navbar :: navbar"></div>
+
+<main class="apprenti-page">
+    <header class="page-header">
+        <h1>Modifier l'apprenti</h1>
+        <a class="back-btn" th:href="@{/ui/dashboard/dashboard}">← Annuler</a>
+    </header>
+
+    <form th:action="@{/ui/dashboard/apprentice/edit}" th:object="${apprenti}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{anneeAcademique.id}" />
+        <input type="hidden" th:field="*{anneeAcademique.active}" />
+        <input type="hidden" th:field="*{tuteurEnseignant.id}" />
+        <!-- SECTION 1 : Informations générales -->
+        <section class="info-section">
+            <h2>Informations générales</h2>
+            <div class="info-grid">
+                <div><span>Nom</span><input th:field="*{nom}" type="text" placeholder="Nom"/></div>
+                <div><span>Prénom</span><input th:field="*{prenom}" type="text" placeholder="Prénom"/></div>
+                <div><span>Email</span><input th:field="*{email}" type="email" placeholder="Email"/></div>
+                <div><span>Téléphone</span><input th:field="*{telephone}" type="text" placeholder="Téléphone"/></div>
+                <div><span>Adresse</span><input th:field="*{adresse}" type="text" placeholder="Adresse"/></div>
+                <div><span>Niveau</span><input th:field="*{anneeLevel}" type="text" placeholder="Niveau"/></div>
+                <div><span>État</span><input th:field="*{etat}" type="text" placeholder="État"/></div>
+                <div><span>Promotion</span><input th:field="*{anneeAcademique.annee}" type="text" placeholder="Promotion"/></div>
+            </div>
+        </section>
+
+        <!-- SECTION 2 : Entreprise -->
+        <section class="info-section enterprise" th:if="${apprenti.entreprise != null}">
+            <h2>Entreprise</h2>
+            <div class="info-grid">
+                <input type="hidden" th:field="*{entreprise.id}" />
+                <div><span>Raison sociale</span><input th:field="*{entreprise.raisonSociale}" type="text"/></div>
+                <div><span>Adresse</span><input th:field="*{entreprise.adresse}" type="text"/></div>
+                <div><span>Adresse</span><input th:field="*{entreprise.infosAcces}" type="text"/></div>
+            </div>
+        </section>
+
+        <!-- SECTION 3 : Maître d’apprentissage -->
+        <section class="info-section supervisor" th:if="${apprenti.maitreApprentissage != null}">
+            <h2>Maître d’apprentissage</h2>
+            <div class="info-grid">
+                <input type="hidden" th:field="*{maitreApprentissage.id}" />
+                <div><span>Nom</span><input th:field="*{maitreApprentissage.nom}" type="text"/></div>
+                <div><span>Prénom</span><input th:field="*{maitreApprentissage.prenom}" type="text"/></div>
+                <div><span>Email</span><input th:field="*{maitreApprentissage.email}" type="email"/></div>
+                <div><span>Poste</span><input th:field="*{maitreApprentissage.poste}" type="text"/></div>
+                <div><span>Téléphone</span><input th:field="*{maitreApprentissage.telephone}" type="text"/></div>
+            </div>
+        </section>
+
+        <!-- SECTION 4 : Évaluation école -->
+        <section class="info-section evaluation" th:if="${apprenti.evaluationEcole != null}">
+            <h2>Évaluation de l'école</h2>
+            <div class="info-grid">
+                <div><span>Thème</span><input th:field="*{evaluationEcole.theme}" type="text"/></div>
+                <div><span>Note</span><input th:field="*{evaluationEcole.noteFinale}" type="number" step="0.1"/></div>
+                <div class="full"><span>Commentaire</span><textarea rows="5" cols="100" th:field="*{evaluationEcole.commentaires}"></textarea></div>
+            </div>
+        </section>
+
+        <!-- SECTION 5 : Soutenance -->
+        <section class="info-section soutenance" th:if="${apprenti.soutenance != null}">
+            <h2>Soutenance</h2>
+            <div class="info-grid">
+                <div><span>Date</span><input th:field="*{soutenance.date}" type="date"/></div>
+                <div><span>Note</span><input th:field="*{soutenance.noteFinale}" type="number" step="0.1"/></div>
+                <div class="full"><span>Commentaire</span><textarea rows="5" cols="100" th:field="*{soutenance.commentaires}"></textarea></div>
+            </div>
+        </section>
+
+        <!-- SECTION 6 : Mission -->
+        <section class="info-section mission" th:if="${apprenti.mission != null}">
+            <h2>Mission</h2>
+            <div class="info-grid">
+                <div><span>Mots clés</span><input th:field="*{mission.motsCles}" type="text"/></div>
+                <div><span>Métier</span><input th:field="*{mission.metierCible}" type="text"/></div>
+                <div class="full"><span>Commentaire</span><textarea rows="5" cols="100" th:field="*{mission.commentaires}"></textarea></div>
+            </div>
+        </section>
+
+        <!-- SECTION 7 : Infos supplémentaires -->
+        <section class="info-section tutor">
+            <h2>Infos supplémentaires</h2>
+            <div class="info-grid">
+                <div class="full"><span>Remarques</span><textarea rows="5" cols="100" th:field="*{remarques}"></textarea></div>
+                <div class="full"><span>Feedback tuteur</span><textarea rows="5" cols="100" th:field="*{feedbackTuteurEnseignant}"></textarea></div>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">💾 Enregistrer</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

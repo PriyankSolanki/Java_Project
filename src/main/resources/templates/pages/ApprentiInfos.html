@@ -12,7 +12,7 @@
 <main class="apprenti-page">
     <header class="page-header">
         <h1>Informations de l'apprenti</h1>
-        <a class="back-btn" th:href="@{/ui/dashboard/dashboard}">← Retour au tableau de bord</a>
+        <a class="back-btn" th:href="@{/ui/dashboard/apprentice/edit/{id}(id=${apprenti.id})}">Modifier l'apprenti</a>
     </header>
 
     <!-- SECTION 1 : Informations générales -->
@@ -27,6 +27,7 @@
             <div><span>Adresse</span><p th:text="${apprenti.adresse}"></p></div>
             <div><span>Niveau</span><p th:text="${apprenti.anneeLevel}"></p></div>
             <div><span>État</span><p th:text="${apprenti.etat}"></p></div>
+            <div><span>Promotion</span><p th:text="${apprenti.anneeAcademique.annee}"></p></div>
         </div>
     </section>
 
@@ -36,6 +37,7 @@
         <div class="info-grid" th:if="${apprenti.entreprise != null}">
             <div><span>Raison sociale</span><p th:text="${apprenti.entreprise.raisonSociale}"></p></div>
             <div><span>Adresse</span><p th:text="${apprenti.entreprise.adresse}"></p></div>
+            <div><span>Adresse</span><p th:text="${apprenti.entreprise.infosAcces}"></p></div>
         </div>
     </section>
 

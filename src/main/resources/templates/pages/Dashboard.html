@@ -18,6 +18,7 @@
       <th>Prénom</th>
       <th>Nom</th>
       <th>Détail</th>
+      <th>Modifier</th>
     </tr>
   </thead>
   <tbody>
@@ -25,7 +26,8 @@
       <td th:text="${apprenti.id}" data-label="ID"></td>
       <td th:text="${apprenti.prenom}" data-label="Prénom">-</td>
       <td th:text="${apprenti.nom}" data-label="Nom">-</td>
-      <td data-label="Action"><a th:href="@{/ui/dashboard/apprentice/{id}(id=${apprenti.id})}">détail</a></td>
+      <td data-label="Action"><a th:href="@{/ui/dashboard/apprentice/{id}(id=${apprenti.id})}">Détail</a></td>
+      <td data-label="Action"><a th:href="@{/ui/dashboard/apprentice/edit/{id}(id=${apprenti.id})}">Modifier</a></td>
     </tr>
     <tr>
       <td colspan="4" class="no-apprentice" th:if="${#lists.isEmpty(apprentis)}">

@@ -22,16 +22,16 @@ public class Apprenti {
     private String anneeLevel;
     private String etat;
 
-    @ManyToOne
+    @ManyToOne(cascade ={CascadeType.MERGE, CascadeType.PERSIST})
     private Entreprise entreprise;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private MaitreApprentissage maitreApprentissage;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private AnneeAcademique anneeAcademique;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private TuteurEnseignant tuteurEnseignant;
 
     @OneToOne(mappedBy = "apprenti", cascade = CascadeType.ALL)
