@@ -27,7 +27,7 @@
             <div><span>Adresse</span><p th:text="${apprenti.adresse}"></p></div>
             <div><span>Niveau</span><p th:text="${apprenti.anneeLevel}"></p></div>
             <div><span>État</span><p th:text="${apprenti.etat}"></p></div>
-            <div><span>Promotion</span><p th:text="${apprenti.anneeAcademique.annee}"></p></div>
+            <div  th:if="${apprenti.anneeAcademique != null}"><span>Promotion</span><p th:text="${apprenti.anneeAcademique.annee}"></p></div>
         </div>
     </section>
 
