@@ -3,6 +3,7 @@ package altn72.projet.services;
 import altn72.projet.dto.EntrepriseCreateRequest;
 import altn72.projet.entities.Entreprise;
 import altn72.projet.repositories.EntrepriseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,11 +11,9 @@ import java.util.List;
 
 @Service
 public class EntrepriseService {
-    private final EntrepriseRepository repo;
 
-    public EntrepriseService(EntrepriseRepository repo) {
-        this.repo = repo;
-    }
+    @Autowired
+    private EntrepriseRepository repo;
 
     @Transactional
     public Entreprise create(EntrepriseCreateRequest req) {

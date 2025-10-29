@@ -1,6 +1,7 @@
 package altn72.projet.controllers;
 
-import altn72.projet.repositories.*;
+import altn72.projet.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,33 +11,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/ui")
 public class ApprentiGlobalPageController {
 
-    private final ApprentiRepository apprentiRepo;
-    private final MaitreApprentissageRepository maitreRepo;
-    private final TuteurEnseignantRepository tuteurRepo;
-    private final EntrepriseRepository entrepriseRepo;
-    private final AnneeAcademiqueRepository anneeRepo;
+    @Autowired
+    private ApprentiService apprentiService;
+    @Autowired
+    private  MaitreApprentissageService maitreApprentissageService;
+    @Autowired
+    private  TuteurEnseignantService tuteurEnseignantService;
+    @Autowired
+    private EntrepriseService entrepriseService;
+    @Autowired
+    private AnneeAcademiqueService anneeAcademiqueService;
 
-    public ApprentiGlobalPageController(ApprentiRepository apprentiRepo,
-                                        MaitreApprentissageRepository maitreRepo,
-                                        TuteurEnseignantRepository tuteurRepo,
-                                        EntrepriseRepository entrepriseRepo,
-                                        AnneeAcademiqueRepository anneeRepo) {
-        this.apprentiRepo = apprentiRepo;
-        this.maitreRepo = maitreRepo;
-        this.tuteurRepo = tuteurRepo;
-        this.entrepriseRepo = entrepriseRepo;
-        this.anneeRepo = anneeRepo;
-    }
 
     @GetMapping("/apprentis/global")
     public String page(Model model) {
-        var sansMaitre = apprentiRepo.findByMaitreApprentissageIsNull();
+        var sansMaitre = apprentiService.findByMaitreApprentissageIsNull();
         model.addAttribute("apprentis", sansMaitre);
         model.addAttribute("total", sansMaitre.size());
-        model.addAttribute("maitres", maitreRepo.findAll());
-        model.addAttribute("tuteurs", tuteurRepo.findAll());
-        model.addAttribute("entreprises", entrepriseRepo.findAll());
-        model.addAttribute("annees", anneeRepo.findAll());
+        model.addAttribute("maitres", maitreApprentissageService.getAll());
+        model.addAttribute("tuteurs", tuteurEnseignantService.getAll());
+        model.addAttribute("entreprises", entrepriseService.findAll());
+        model.addAttribute("annees", anneeAcademiqueService.getAll());
         return "pages/apprenti_global";
     }
 }

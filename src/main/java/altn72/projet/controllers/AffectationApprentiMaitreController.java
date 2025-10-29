@@ -3,7 +3,8 @@ package altn72.projet.controllers;
 import altn72.projet.dto.ApprentiDto;
 import altn72.projet.dto.ApprentiMapper;
 import altn72.projet.entities.Apprenti;
-import altn72.projet.services.AffectationApprentiMaitre;
+import altn72.projet.services.AffectationApprentiMaitreService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +12,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AffectationApprentiMaitreController {
 
-    private final AffectationApprentiMaitre affectationService;
+    @Autowired
+    private AffectationApprentiMaitreService affectationService;
 
-    public AffectationApprentiMaitreController(AffectationApprentiMaitre affectationService) {
-        this.affectationService = affectationService;
-    }
 
     @PutMapping("/maitres/{maitreId}/apprentis/{apprentiId}")
     public ResponseEntity<ApprentiDto> affecter(

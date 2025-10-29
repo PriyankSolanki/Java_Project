@@ -5,21 +5,19 @@ import altn72.projet.entities.MaitreApprentissage;
 import altn72.projet.repositories.ApprentiRepository;
 import altn72.projet.repositories.MaitreApprentissageRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class AffectationApprentiMaitre {
+public class AffectationApprentiMaitreService {
 
-    private final ApprentiRepository apprentiRepo;
-    private final MaitreApprentissageRepository maitreRepo;
+    @Autowired
+    private ApprentiRepository apprentiRepo;
+    @Autowired
+    private MaitreApprentissageRepository maitreRepo;
 
-    public AffectationApprentiMaitre(ApprentiRepository apprentiRepo,
-                              MaitreApprentissageRepository maitreRepo) {
-        this.apprentiRepo = apprentiRepo;
-        this.maitreRepo = maitreRepo;
-    }
 
     @Transactional
     public Apprenti affecterApprentiAuMaitre(Long apprentiId, Long maitreId) {

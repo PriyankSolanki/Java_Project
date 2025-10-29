@@ -4,7 +4,6 @@ import altn72.projet.entities.TuteurEnseignant;
 import altn72.projet.repositories.TuteurEnseignantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +17,9 @@ public class TuteurEnseignantService {
         return tuteurEnseignantRepository.findAll();
     }
 
-    public Optional<TuteurEnseignant> getById(Integer id) {
+    public Optional<TuteurEnseignant> getByLogin(String login) {
 
-        TuteurEnseignant tuteurEnseignant = tuteurEnseignantRepository.findById(Long.valueOf(id)).orElse(null);
+        TuteurEnseignant tuteurEnseignant = tuteurEnseignantRepository.findByLogin(login).orElse(null);
 
         if(tuteurEnseignant == null) {
             return Optional.empty();

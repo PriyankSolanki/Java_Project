@@ -1,7 +1,8 @@
 package altn72.projet.controllers;
 
-import altn72.projet.repositories.ApprentiRepository;
-import altn72.projet.repositories.MaitreApprentissageRepository;
+import altn72.projet.services.ApprentiService;
+import altn72.projet.services.MaitreApprentissageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,19 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/ui")
 public class AffectationPageController {
 
-    private final ApprentiRepository apprentiRepo;
-    private final MaitreApprentissageRepository maitreRepo;
+    @Autowired
+    private ApprentiService apprentiService;
+    @Autowired
+    private MaitreApprentissageService maitreApprentissageService;
 
-    public AffectationPageController(ApprentiRepository apprentiRepo,
-                                     MaitreApprentissageRepository maitreRepo) {
-        this.apprentiRepo = apprentiRepo;
-        this.maitreRepo = maitreRepo;
-    }
 
     @GetMapping("/affectation")
     public String page(Model model) {
-        model.addAttribute("apprentis", apprentiRepo.findAll());
-        model.addAttribute("maitres", maitreRepo.findAll());
+        model.addAttribute("apprentis", apprentiService.getAll());
+        model.addAttribute("maitres", maitreApprentissageService.getAll());
         return "affectation";
     }
 }

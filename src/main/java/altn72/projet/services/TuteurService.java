@@ -1,9 +1,8 @@
 package altn72.projet.services;
 
-
-
 import altn72.projet.entities.TuteurEnseignant;
 import altn72.projet.repositories.TuteurEnseignantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,13 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TuteurService implements UserDetailsService {
 
-    private final TuteurEnseignantRepository repo;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private TuteurEnseignantRepository repo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    public TuteurService(TuteurEnseignantRepository repo, PasswordEncoder passwordEncoder) {
-        this.repo = repo;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {

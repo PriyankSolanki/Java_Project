@@ -7,6 +7,7 @@ import jakarta.validation.Validator;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,13 +19,10 @@ import java.util.Set;
 @Service
 public class ApprentiImportService {
 
-    private final ApprentiCommandService commandService;
-    private final Validator validator;
-
-    public ApprentiImportService(ApprentiCommandService commandService, Validator validator) {
-        this.commandService = commandService;
-        this.validator = validator;
-    }
+    @Autowired
+    private ApprentiCommandService commandService;
+    @Autowired
+    private Validator validator;
 
     public ImportCsvReport importCsv(MultipartFile file) throws Exception {
         if (file == null || file.isEmpty()) {

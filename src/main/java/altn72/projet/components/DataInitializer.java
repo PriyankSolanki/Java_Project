@@ -1,8 +1,9 @@
-package altn72.projet.services;
+package altn72.projet.components;
 
 
 import altn72.projet.repositories.*;
 import altn72.projet.entities.*;
+import altn72.projet.services.TuteurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -35,13 +36,6 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Tuteur initialisé : login : jaugustin / mdp : password123");
             return;
         }
-
-        TuteurEnseignant t = new TuteurEnseignant();
-        t.setPrenom("admin");
-        t.setNom("admin");
-        t.setLogin("admin123");
-        t.setMotDePasse("000000");
-        tuteurService.saveTuteur(t);
 
         TuteurEnseignant tuteur = new TuteurEnseignant();
         tuteur.setPrenom("Jacques");
@@ -171,10 +165,6 @@ public class DataInitializer implements CommandLineRunner {
         visite2.setFormat("Visio");
         visite2.setCommentaires("Besoin d'accompagnement supplémentaire");
         visiteRepo.save(visite2);
-
-
-
-
 
         System.out.println("Base de données initialisée avec succès !");
     }

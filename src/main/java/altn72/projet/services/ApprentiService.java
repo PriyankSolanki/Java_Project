@@ -13,6 +13,10 @@ public class ApprentiService {
     @Autowired
     private ApprentiRepository apprentiRepository;
 
+    public List<Apprenti> getAll() {
+        return apprentiRepository.findAll();
+    }
+
     public Optional<Apprenti> getById(Integer id) {
         Apprenti apprenti = apprentiRepository.findById(Long.valueOf(id)).orElse(null);
 
@@ -33,5 +37,9 @@ public class ApprentiService {
 
     public List<Apprenti> getApprentisActifs() {
         return apprentiRepository.getApprentisActifs();
+    }
+
+    public List<Apprenti> findByMaitreApprentissageIsNull() {
+        return apprentiRepository.findByMaitreApprentissageIsNull();
     }
 }
