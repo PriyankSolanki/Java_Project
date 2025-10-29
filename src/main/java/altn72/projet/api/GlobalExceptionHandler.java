@@ -1,5 +1,7 @@
 package altn72.projet.api;
 
+import altn72.projet.exceptions.ApprentiNotFoundException;
+import altn72.projet.exceptions.TuteurEnseignantNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +13,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -100,5 +106,23 @@ public class GlobalExceptionHandler {
         var api = new ApiError(status.value(), status.getReasonPhrase(),
                 ex.getMessage(), req.getRequestURI());
         return new ResponseEntity<>(api, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler(ApprentiNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleApprentiNotFound(ApprentiNotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("erreur", ex.getMessage());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(TuteurEnseignantNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleTuteurEnseignantNotFound(TuteurEnseignantNotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("erreur", ex.getMessage());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 }
