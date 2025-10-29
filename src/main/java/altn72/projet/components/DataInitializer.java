@@ -33,7 +33,6 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args){
         if (apprentiRepo.count() > 0) {
-            System.out.println("Tuteur initialisé : login : jaugustin / mdp : password123");
             return;
         }
 
@@ -165,7 +164,5 @@ public class DataInitializer implements CommandLineRunner {
         visite2.setFormat("Visio");
         visite2.setCommentaires("Besoin d'accompagnement supplémentaire");
         visiteRepo.save(visite2);
-
-        System.out.println("Base de données initialisée avec succès !");
     }
 }
