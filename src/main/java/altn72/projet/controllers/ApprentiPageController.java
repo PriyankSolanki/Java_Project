@@ -1,4 +1,3 @@
-//Page qui concerce la création des nouveaux étudiants
 package altn72.projet.controllers;
 
 import altn72.projet.repositories.*;
@@ -32,6 +31,6 @@ public class ApprentiPageController {
         model.addAttribute("maitres", maitreRepo.findAll());
         model.addAttribute("tuteurs", tuteurRepo.findAll());
         model.addAttribute("annees", anneeRepo.findAll());
-        return "apprenti_create"; // -> templates/apprenti_create.html
+        return "apprenti_create";
     }
 }

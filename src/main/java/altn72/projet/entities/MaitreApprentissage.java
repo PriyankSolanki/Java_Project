@@ -1,11 +1,10 @@
 package altn72.projet.entities;
 
-
-
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
 @Entity

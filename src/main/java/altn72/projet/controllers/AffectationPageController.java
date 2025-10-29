@@ -24,6 +24,6 @@ public class AffectationPageController {
     public String page(Model model) {
         model.addAttribute("apprentis", apprentiRepo.findAll());
         model.addAttribute("maitres", maitreRepo.findAll());
-        return "affectation"; // => templates/affectation.html
+        return "affectation";
     }
 }

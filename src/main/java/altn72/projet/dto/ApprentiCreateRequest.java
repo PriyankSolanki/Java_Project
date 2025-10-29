@@ -11,17 +11,14 @@ public record ApprentiCreateRequest(
         @Size(max = 20)           String telephone,
         @Size(max = 255)          String adresse,
 
-        // valeurs libres dans ton modèle (ex: "ACTIF", "INACTIF"…)
         String etat,
         String anneeLevel,
 
-        // relations (optionnelles) passées par IDs
         Long entrepriseId,
         Long maitreId,
         Long tuteurId,
         Long anneeAcademiqueId,
 
-        // optionnels
         String remarques,
         String feedbackTuteurEnseignant
 ) {}

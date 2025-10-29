@@ -1,10 +1,10 @@
 package altn72.projet.entities;
 
-
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
 @Entity
@@ -14,7 +14,7 @@ public class Visite {
     private Long id;
 
     private LocalDate date;
-    private String format; // Visio ou presentiel
+    private String format;
     private String commentaires;
 
     @ManyToOne

@@ -3,10 +3,8 @@ package altn72.projet.services;
 
 import altn72.projet.repositories.*;
 import altn72.projet.entities.*;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 
 @Component
@@ -42,9 +40,8 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args){
 
-        // --- Check si la base est vide ---
         if (tuteurRepo.count() > 0) {
             System.out.println("Base déjà initialisée, aucune action effectuée.");
             System.out.println("Tuteur initialisé : admin123 / 000000");
@@ -60,7 +57,6 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Tuteur initialisé : admin123 / 000000");
 
 
-        // --- Création d'années académiques ---
         AnneeAcademique annee2025 = new AnneeAcademique();
         annee2025.setAnnee("2025-2026");
         annee2025.setActive(true);
@@ -71,7 +67,6 @@ public class DataInitializer implements CommandLineRunner {
         annee2024.setActive(false);
         anneeRepo.save(annee2024);
 
-        // --- Création d'un tuteur enseignant ---
         TuteurEnseignant tuteur = new TuteurEnseignant();
         tuteur.setPrenom("Jacques");
         tuteur.setNom("Augustin");
@@ -80,7 +75,6 @@ public class DataInitializer implements CommandLineRunner {
         tuteur.setEmail("jacques.augustin@efrei.fr");
         tuteurRepo.save(tuteur);
 
-        // --- Création d'entreprises ---
         Entreprise entreprise1 = new Entreprise();
         entreprise1.setRaisonSociale("TechCorp");
         entreprise1.setAdresse("10 rue de Paris, 75001 Paris");
@@ -93,7 +87,6 @@ public class DataInitializer implements CommandLineRunner {
         entreprise2.setInfosAcces("Badge requis, 3ème étage");
         entrepriseRepo.save(entreprise2);
 
-        // --- Création de maîtres d'apprentissage ---
         MaitreApprentissage maitre1 = new MaitreApprentissage();
         maitre1.setNom("Durand");
         maitre1.setPrenom("Paul");
@@ -110,7 +103,6 @@ public class DataInitializer implements CommandLineRunner {
         maitre2.setPoste("Chef de projet");
         maitreRepo.save(maitre2);
 
-        // --- Création d'apprentis ---
         Apprenti apprenti1 = new Apprenti();
         apprenti1.setNom("Leclerc");
         apprenti1.setPrenom("Sophie");
@@ -151,7 +143,6 @@ public class DataInitializer implements CommandLineRunner {
 
         apprentiRepo.save(apprenti2);
 
-        // --- Création de visites ---
         Visite visite1 = new Visite();
         visite1.setApprenti(apprenti1);
         visite1.setDate(LocalDate.of(2025, 10, 5));
@@ -166,7 +157,6 @@ public class DataInitializer implements CommandLineRunner {
         visite2.setCommentaires("Besoin d'accompagnement supplémentaire");
         visiteRepo.save(visite2);
 
-        // --- Création d'évaluations école ---
         EvaluationEcole eval1 = new EvaluationEcole();
         eval1.setApprenti(apprenti1);
         eval1.setTheme("Rapport DevOps");
@@ -181,7 +171,6 @@ public class DataInitializer implements CommandLineRunner {
         eval2.setCommentaires("Travail correct mais à améliorer");
         evalRepo.save(eval2);
 
-        // --- Création de soutenances ---
         Soutenance soutenance1 = new Soutenance();
         soutenance1.setApprenti(apprenti1);
         soutenance1.setDate(LocalDate.of(2025, 11, 20));

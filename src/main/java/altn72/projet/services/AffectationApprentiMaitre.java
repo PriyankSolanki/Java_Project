@@ -31,19 +31,16 @@ public class AffectationApprentiMaitre {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Maître d’apprentissage " + maitreId + " introuvable"));
 
-        // si déjà affecté au même maître -> rien à faire
         if (apprenti.getMaitreApprentissage() != null &&
                 maitreId.equals(apprenti.getMaitreApprentissage().getId())) {
             return apprenti;
         }
 
-        // retirer du précédent maître si nécessaire
         MaitreApprentissage ancien = apprenti.getMaitreApprentissage();
         if (ancien != null && ancien.getApprentis() != null) {
             ancien.getApprentis().remove(apprenti);
         }
 
-        // affecter au nouveau maître
         apprenti.setMaitreApprentissage(maitre);
         if (maitre.getApprentis() != null && !maitre.getApprentis().contains(apprenti)) {
             maitre.getApprentis().add(apprenti);

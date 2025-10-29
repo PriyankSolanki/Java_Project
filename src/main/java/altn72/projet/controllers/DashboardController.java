@@ -7,7 +7,6 @@ import altn72.projet.exceptions.ApprentiNotFoundException;
 import altn72.projet.repositories.ApprentiRepository;
 import altn72.projet.services.AnneeAcademiqueService;
 import altn72.projet.services.ApprentiService;
-import altn72.projet.services.TuteurEnseignantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import altn72.projet.repositories.TuteurEnseignantRepository;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,20 +24,15 @@ import java.util.List;
 @RequestMapping("/ui/dashboard")
 public class DashboardController {
 
-    private final ApprentiRepository apprentiRepo;
-    private final TuteurEnseignantRepository tuteurRepo;
-
+    @Autowired
+    private ApprentiRepository apprentiRepo;
+    @Autowired
+    private TuteurEnseignantRepository tuteurRepo;
     @Autowired
     private AnneeAcademiqueService anneeAcademiqueService;
     @Autowired
-    private TuteurEnseignantService tuteurEnseignantService;
-    @Autowired
     private ApprentiService apprentiService;
 
-    public DashboardController(ApprentiRepository apprentiRepo, TuteurEnseignantRepository tuteurRepo) {
-        this.apprentiRepo = apprentiRepo;
-        this.tuteurRepo = tuteurRepo;
-    }
 
     @GetMapping("/sans-maitre")
     public String apprentisSansMaitre(Model model) {
@@ -50,7 +44,6 @@ public class DashboardController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model, @AuthenticationPrincipal User principal) {
-        // récupère le TuteurEnseignant connecté via son login
         TuteurEnseignant tuteurEnseignantConnected = tuteurRepo.findByLogin(principal.getUsername())
                 .orElseThrow(() -> new RuntimeException("Tuteur non trouvé"));
 
@@ -85,7 +78,7 @@ public class DashboardController {
     }
 
     @GetMapping("/search")
-    public String search(Model model, @AuthenticationPrincipal User principal,
+    public String search(Model model,
                          @RequestParam(required = false) String name,
                          @RequestParam(required = false) String enterprise,
                          @RequestParam(required = false) String promotion,

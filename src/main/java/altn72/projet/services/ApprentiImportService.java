@@ -10,7 +10,6 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +19,7 @@ import java.util.Set;
 public class ApprentiImportService {
 
     private final ApprentiCommandService commandService;
-    private final Validator validator; // pour appliquer @Email,@NotBlank… sur le DTO
+    private final Validator validator;
 
     public ApprentiImportService(ApprentiCommandService commandService, Validator validator) {
         this.commandService = commandService;
@@ -38,18 +37,17 @@ public class ApprentiImportService {
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
              var parser = new CSVParser(reader, CSVFormat.DEFAULT
                      .builder()
-                     .setHeader()               // lit l'entête
-                     .setSkipHeaderRecord(true) // saute l'entête dans l'itération
+                     .setHeader()
+                     .setSkipHeaderRecord(true)
                      .setTrim(true)
                      .build())) {
 
-            int line = 1; // header = 1
+            int line = 1;
             for (CSVRecord r : parser) {
                 line++;
                 report.totalRows++;
 
                 try {
-                    // lecture sécurisée (null si colonne absente ou vide)
                     String prenom  = nv(r, "prenom");
                     String nom     = nv(r, "nom");
                     String email   = nv(r, "email");
@@ -72,7 +70,6 @@ public class ApprentiImportService {
                             remarques, feedback
                     );
 
-                    // validation programmatique du DTO (annots @NotBlank, @Email, @Size…)
                     Set<ConstraintViolation<ApprentiCreateRequest>> v = validator.validate(req);
                     if (!v.isEmpty()) {
                         String msg = v.stream()
@@ -83,23 +80,19 @@ public class ApprentiImportService {
                         continue;
                     }
 
-                    // création via la logique existante
                     var created = commandService.create(req);
 
                     report.success++;
 
-                    // >>> Rapport enrichi avec prenom/nom/email issus de la création
                     report.successes.add(new ImportCsvReport.RowSuccess(
                             line,
                             created.getId(),
-                            // on préfère la valeur retournée par create(); fallback sur la valeur du CSV
                             (created.getEmail() != null ? created.getEmail() : email),
                             created.getPrenom(),
                             created.getNom()
                     ));
 
                 } catch (ResponseStatusException ex) {
-                    // erreurs métier (IDs relations inconnus, etc.) -> message clair
                     report.failed++;
                     report.errors.add(new ImportCsvReport.RowError(
                             line,

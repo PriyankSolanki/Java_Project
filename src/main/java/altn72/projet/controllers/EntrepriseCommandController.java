@@ -6,6 +6,7 @@ import altn72.projet.dto.EntrepriseMapper;
 import altn72.projet.entities.Entreprise;
 import altn72.projet.services.EntrepriseService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +17,9 @@ import java.util.List;
 @RequestMapping("/api/entreprises")
 public class EntrepriseCommandController {
 
-    private final EntrepriseService service;
-
-    public EntrepriseCommandController(EntrepriseService service) {
-        this.service = service;
-    }
-
+    @Autowired
+    private EntrepriseService service;
+    
     @PostMapping
     public ResponseEntity<EntrepriseDto> create(@RequestBody @Valid EntrepriseCreateRequest req) {
         Entreprise created = service.create(req);

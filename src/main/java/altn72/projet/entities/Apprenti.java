@@ -1,12 +1,10 @@
 package altn72.projet.entities;
 
-
 import jakarta.persistence.*;
-
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
 @Entity
@@ -21,7 +19,7 @@ public class Apprenti {
     private String telephone;
     private String adresse;
 
-    private String anneeLevel; // I1, I2, I3
+    private String anneeLevel;
     private String etat;
 
     @ManyToOne

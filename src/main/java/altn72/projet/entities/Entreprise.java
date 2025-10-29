@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
 @Entity
@@ -14,7 +15,7 @@ public class Entreprise {
 
     private String raisonSociale;
     private String adresse;
-    private String infosAcces; // badge, etage...
+    private String infosAcces;
 
     @OneToMany(mappedBy = "entreprise", cascade = CascadeType.ALL)
     private List<Apprenti> apprentis;

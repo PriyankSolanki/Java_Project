@@ -18,7 +18,7 @@
     <!-- SECTION 1 : Informations générales -->
     <section class="info-section">
         <h2>Informations générales</h2>
-        <div class="info-grid">
+        <div class="info-grid" th:if="${apprenti != null}">
             <div><span>Id</span><p th:text="${apprenti.id}"></p></div>
             <div><span>Nom</span><p th:text="${apprenti.nom}"></p></div>
             <div><span>Prénom</span><p th:text="${apprenti.prenom}"></p></div>
@@ -33,7 +33,7 @@
     <!-- SECTION 2 : Entreprise -->
     <section class="info-section enterprise">
         <h2>Entreprise</h2>
-        <div class="info-grid">
+        <div class="info-grid" th:if="${apprenti.entreprise != null}">
             <div><span>Raison sociale</span><p th:text="${apprenti.entreprise.raisonSociale}"></p></div>
             <div><span>Adresse</span><p th:text="${apprenti.entreprise.adresse}"></p></div>
         </div>
@@ -42,7 +42,7 @@
     <!-- SECTION 3 : Maître d’apprentissage -->
     <section class="info-section supervisor">
         <h2>Maître d’apprentissage</h2>
-        <div class="info-grid">
+        <div class="info-grid" th:if="${apprenti.maitreApprentissage != null}">
             <div><span>Nom</span><p th:text="${apprenti.maitreApprentissage.nom}"></p></div>
             <div><span>Prénom</span><p th:text="${apprenti.maitreApprentissage.prenom}"></p></div>
             <div><span>Email</span><p th:text="${apprenti.maitreApprentissage.email}"></p></div>
@@ -54,7 +54,7 @@
     <!-- SECTION 4 : Évaluation école -->
     <section class="info-section evaluation">
         <h2>Évaluation de l'école</h2>
-        <div class="info-grid">
+        <div class="info-grid" th:if="${apprenti.evaluationEcole != null}">
             <div><span>Thème</span><p th:text="${apprenti.evaluationEcole.theme}"></p></div>
             <div><span>Note</span><p th:text="${apprenti.evaluationEcole.noteFinale}"></p></div>
             <div class="full"><span>Commentaire</span><p th:text="${apprenti.evaluationEcole.commentaires}"></p></div>
@@ -64,7 +64,7 @@
     <!-- SECTION 5 : Soutenance -->
     <section class="info-section soutenance">
         <h2>Soutenance</h2>
-        <div class="info-grid">
+        <div class="info-grid" th:if="${apprenti.soutenance != null}">
             <div><span>Date</span><p th:text="${apprenti.soutenance.date}"></p></div>
             <div><span>Note</span><p th:text="${apprenti.soutenance.noteFinale}"></p></div>
             <div class="full"><span>Commentaire</span><p th:text="${apprenti.soutenance.commentaires}"></p></div>
@@ -86,7 +86,7 @@
     <!-- SECTION 7 : Mission -->
     <section class="info-section mission">
         <h2>Mission</h2>
-        <div class="info-grid">
+        <div class="info-grid" th:if="${apprenti.mission != null}">
             <div><span>Mots clés</span><p th:text="${apprenti.mission.motsCles}"></p></div>
             <div><span>Métier</span><p th:text="${apprenti.mission.metierCible}"></p></div>
             <div class="full"><span>Commentaire</span><p th:text="${apprenti.mission.commentaires}"></p></div>
@@ -97,8 +97,8 @@
     <section class="info-section tutor">
         <h2>Infos supplémentaires</h2>
         <div class="info-grid">
-            <div class="full"><span>Remarques</span><p th:text="${apprenti.remarques}"></p></div>
-            <div class="full"><span>Feedback</span><p th:text="${apprenti.feedbackTuteurEnseignant}"></p></div>
+            <div class="full" th:if="${apprenti.remarques != null}"><span>Remarques</span><p th:text="${apprenti.remarques}"></p></div>
+            <div class="full" th:if="${apprenti.feedbackTuteurEnseignant != null}"><span>Feedback</span><p th:text="${apprenti.feedbackTuteurEnseignant}"></p></div>
         </div>
     </section>
 </main>

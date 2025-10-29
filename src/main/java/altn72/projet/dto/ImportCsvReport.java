@@ -11,18 +11,12 @@ public class ImportCsvReport {
     public List<RowError> errors = new ArrayList<>();
 
     public static class RowSuccess {
-        public int line;          // numéro de ligne (1 = header)
-        public Long apprentiId;   // id créé
-        public String email;      // pour information
-        public String prenom;     // >>> AJOUT
-        public String nom;        // >>> AJOUT
+        public int line;
+        public Long apprentiId;
+        public String email;
+        public String prenom;
+        public String nom;
 
-        // Constructeur HISTORIQUE (reste compatible)
-        public RowSuccess(int line, Long apprentiId, String email) {
-            this(line, apprentiId, email, null, null);
-        }
-
-        // Nouveau constructeur avec prenom/nom
         public RowSuccess(int line, Long apprentiId, String email, String prenom, String nom) {
             this.line = line;
             this.apprentiId = apprentiId;
@@ -34,7 +28,7 @@ public class ImportCsvReport {
 
     public static class RowError {
         public int line;
-        public String message;    // message lisible (validation / 404 / etc.)
+        public String message;
         public RowError(int line, String message) {
             this.line = line;
             this.message = message;

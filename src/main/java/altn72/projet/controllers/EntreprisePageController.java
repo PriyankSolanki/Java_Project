@@ -10,6 +10,6 @@ public class EntreprisePageController {
 
     @GetMapping("/nouveau")
     public String nouveau() {
-        return "entreprise_create"; // -> templates/entreprise_create.html
+        return "entreprise_create";
     }
 }

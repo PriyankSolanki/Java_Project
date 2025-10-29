@@ -1,4 +1,3 @@
-// Nouveau fichier: ApprentiGlobalPageController.java
 package altn72.projet.controllers;
 
 import altn72.projet.repositories.*;
