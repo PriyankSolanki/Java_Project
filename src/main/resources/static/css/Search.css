@@ -1,0 +1,208 @@
+/* ===============================
+   PAGE RECHERCHE - STYLE DASHBOARD
+   =============================== */
+
+
+
+html, body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    height: 100%;
+    min-height: 100vh;
+}
+
+/* --------- Conteneur principal --------- */
+.search-container {
+    max-width: 900px;
+    margin: 3rem auto;
+    background: #ffffff;
+    padding: 2.5rem 3rem;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+/* --------- Titre principal --------- */
+.search-container h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #0056b3;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+/* --------- Formulaire de recherche --------- */
+.search-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-container label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.4rem;
+}
+
+.search-container input[type="text"] {
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.search-container input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+/* --------- Bouton de recherche --------- */
+.search-container button[type="submit"] {
+    grid-column: 1 / -1;
+    justify-self: center;
+    background: #007bff;
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease, transform 0.15s ease;
+}
+
+.search-container button[type="submit"]:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* --------- Résultats --------- */
+.results {
+    margin-top: 2.5rem;
+}
+
+.results h2 {
+    font-size: 1.4rem;
+    color: #003f88;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* --------- Tableau --------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+thead {
+    background: linear-gradient(135deg, #4A90E2, #325796);
+    color: white;
+}
+
+thead th {
+    text-align: left;
+    padding: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.95rem;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background-color: #f5f9ff;
+    transition: background 0.2s ease-in-out;
+}
+
+/* --------- Lien "Voir" --------- */
+tbody a {
+    text-decoration: none;
+    background: #007bff;
+    color: white;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+    transition: all 0.25s ease;
+}
+
+tbody a:hover {
+    background: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 86, 179, 0.4);
+}
+
+/* --------- Message "Aucun résultat" --------- */
+.no-result {
+    text-align: center;
+    padding: 1.5rem;
+    color: #777;
+    font-style: italic;
+    background-color: #fafafa;
+}
+
+/* --------- Responsive --------- */
+@media (max-width: 768px) {
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+
+    .search-container button[type="submit"] {
+        width: 100%;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.8rem 1rem;
+        border: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #555;
+    }
+
+    tbody td:last-child {
+        border-bottom: none;
+    }
+}

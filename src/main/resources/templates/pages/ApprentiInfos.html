@@ -2,71 +2,105 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Information de l'apprenti</title>
+    <title>Informations de l'apprenti</title>
     <link rel="stylesheet" th:href="@{/css/apprentiInfos.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
-<h2>Informations de l'apprenti</h2>
-<div class="apprentice-infos">
-    <a th:href="@{/ui/dashboard/dashboard}">⬅ Tableau de bord</a>
-    <p>Id : <span th:text="${apprenti.id}"></span></p>
-    <p>Nom : <span th:text="${apprenti.nom}"></span></p>
-    <p>Prénom : <span th:text="${apprenti.prenom}"></span></p>
-    <p>Adresse : <span th:text="${apprenti.adresse}"></span></p>
-    <p>Téléphone : <span th:text="${apprenti.telephone}"></span></p>
-    <p>Niveau : <span th:text="${apprenti.anneeLevel}"></span></p>
-    <p>Email : <span th:text="${apprenti.email}"></span></p>
-    <p>Actif : <span th:text="${apprenti.etat}"></span></p>
-    <div class="enterprise-infos">
-        <h3>Entreprise</h3>
-        <p>Raison sociale : <span th:text="${apprenti.entreprise.raisonSociale}"></span></p>
-        <p>Adresse : <span th:text="${apprenti.entreprise.adresse}"></span></p>
-    </div>
-    <div class="supervisor-infos">
-        <h3>Maître d'apprentissage</h3>
-        <p>Nom : <span th:text="${apprenti.maitreApprentissage.nom}"></span></p>
-        <p>Prénom : <span th:text="${apprenti.maitreApprentissage.prenom}"></span></p>
-        <p>Email : <span th:text="${apprenti.maitreApprentissage.email}"></span></p>
-        <p>Poste : <span th:text="${apprenti.maitreApprentissage.poste}"></span></p>
-        <p>Téléphone : <span th:text="${apprenti.maitreApprentissage.telephone}"></span></p>
-    </div>
+<div th:replace="partials/navbar :: navbar"></div>
 
-    <div class="school-evaluation-infos">
-        <h3>Évaluation de l'école</h3>
-        <p>Thème : <span th:text="${apprenti.evaluationEcole.theme}"></span></p>
-        <p>Commentaire : <span th:text="${apprenti.evaluationEcole.commentaires}"></span></p>
-        <p>Note : <span th:text="${apprenti.evaluationEcole.noteFinale}"></span></p>
-    </div>
+<main class="apprenti-page">
+    <header class="page-header">
+        <h1>Informations de l'apprenti</h1>
+        <a class="back-btn" th:href="@{/ui/dashboard/dashboard}">← Retour au tableau de bord</a>
+    </header>
 
-    <div class="defense-infos">
-        <h3>Soutenance</h3>
-        <p>Date : <span th:text="${apprenti.soutenance.date}"></span></p>
-        <p>Commentaire : <span th:text="${apprenti.soutenance.commentaires}"></span></p>
-        <p>Note : <span th:text="${apprenti.soutenance.noteFinale}"></span></p>
-    </div>
-    <div class="visit-infos">
-        <h3>Visite(s)</h3>
-        <div class="visit" th:each="visit : ${apprenti.visites}">
-            <p>Visite du <span th:text="${visit.date}"></span></p>
-            <p>Format : <span th:text="${visit.format}"></span></p>
-            <p>Commentaire : <span th:text="${visit.commentaires}"></span></p>
+    <!-- SECTION 1 : Informations générales -->
+    <section class="info-section">
+        <h2>Informations générales</h2>
+        <div class="info-grid">
+            <div><span>Id</span><p th:text="${apprenti.id}"></p></div>
+            <div><span>Nom</span><p th:text="${apprenti.nom}"></p></div>
+            <div><span>Prénom</span><p th:text="${apprenti.prenom}"></p></div>
+            <div><span>Email</span><p th:text="${apprenti.email}"></p></div>
+            <div><span>Téléphone</span><p th:text="${apprenti.telephone}"></p></div>
+            <div><span>Adresse</span><p th:text="${apprenti.adresse}"></p></div>
+            <div><span>Niveau</span><p th:text="${apprenti.anneeLevel}"></p></div>
+            <div><span>État</span><p th:text="${apprenti.etat}"></p></div>
         </div>
-    </div>
+    </section>
 
-    <div class="mission-infos">
-        <h3>Mission</h3>
-        <p>Mots clés : <span th:text="${apprenti.mission.motsCles}"></span></p>
-        <p>Métier : <span th:text="${apprenti.mission.metierCible}"></span></p>
-        <p>Commentaire : <span th:text="${apprenti.mission.commentaires}"></span></p>
-    </div>
+    <!-- SECTION 2 : Entreprise -->
+    <section class="info-section enterprise">
+        <h2>Entreprise</h2>
+        <div class="info-grid">
+            <div><span>Raison sociale</span><p th:text="${apprenti.entreprise.raisonSociale}"></p></div>
+            <div><span>Adresse</span><p th:text="${apprenti.entreprise.adresse}"></p></div>
+        </div>
+    </section>
 
-    <div class="tutor-infos">
-        <h3>Infos supplémentaires</h3>
-        <p>Remarques : <span th:text="${apprenti.remarques}"></span></p>
-        <p>Feedback : <span th:text="${apprenti.feedbackTuteurEnseignant}"></span></p>
-    </div>
-</div>
+    <!-- SECTION 3 : Maître d’apprentissage -->
+    <section class="info-section supervisor">
+        <h2>Maître d’apprentissage</h2>
+        <div class="info-grid">
+            <div><span>Nom</span><p th:text="${apprenti.maitreApprentissage.nom}"></p></div>
+            <div><span>Prénom</span><p th:text="${apprenti.maitreApprentissage.prenom}"></p></div>
+            <div><span>Email</span><p th:text="${apprenti.maitreApprentissage.email}"></p></div>
+            <div><span>Poste</span><p th:text="${apprenti.maitreApprentissage.poste}"></p></div>
+            <div><span>Téléphone</span><p th:text="${apprenti.maitreApprentissage.telephone}"></p></div>
+        </div>
+    </section>
 
+    <!-- SECTION 4 : Évaluation école -->
+    <section class="info-section evaluation">
+        <h2>Évaluation de l'école</h2>
+        <div class="info-grid">
+            <div><span>Thème</span><p th:text="${apprenti.evaluationEcole.theme}"></p></div>
+            <div><span>Note</span><p th:text="${apprenti.evaluationEcole.noteFinale}"></p></div>
+            <div class="full"><span>Commentaire</span><p th:text="${apprenti.evaluationEcole.commentaires}"></p></div>
+        </div>
+    </section>
 
+    <!-- SECTION 5 : Soutenance -->
+    <section class="info-section soutenance">
+        <h2>Soutenance</h2>
+        <div class="info-grid">
+            <div><span>Date</span><p th:text="${apprenti.soutenance.date}"></p></div>
+            <div><span>Note</span><p th:text="${apprenti.soutenance.noteFinale}"></p></div>
+            <div class="full"><span>Commentaire</span><p th:text="${apprenti.soutenance.commentaires}"></p></div>
+        </div>
+    </section>
+
+    <!-- SECTION 6 : Visites -->
+    <section class="info-section visits">
+        <h2>Visite(s)</h2>
+        <div class="visit-cards" th:each="visit : ${apprenti.visites}">
+            <div class="visit-card">
+                <p><strong>Date :</strong> <span th:text="${visit.date}"></span></p>
+                <p><strong>Format :</strong> <span th:text="${visit.format}"></span></p>
+                <p><strong>Commentaire :</strong> <span th:text="${visit.commentaires}"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7 : Mission -->
+    <section class="info-section mission">
+        <h2>Mission</h2>
+        <div class="info-grid">
+            <div><span>Mots clés</span><p th:text="${apprenti.mission.motsCles}"></p></div>
+            <div><span>Métier</span><p th:text="${apprenti.mission.metierCible}"></p></div>
+            <div class="full"><span>Commentaire</span><p th:text="${apprenti.mission.commentaires}"></p></div>
+        </div>
+    </section>
+
+    <!-- SECTION 8 : Informations supplémentaires -->
+    <section class="info-section tutor">
+        <h2>Infos supplémentaires</h2>
+        <div class="info-grid">
+            <div class="full"><span>Remarques</span><p th:text="${apprenti.remarques}"></p></div>
+            <div class="full"><span>Feedback</span><p th:text="${apprenti.feedbackTuteurEnseignant}"></p></div>
+        </div>
+    </section>
+</main>
 </body>
 </html>

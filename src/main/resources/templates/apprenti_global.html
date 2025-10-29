@@ -7,7 +7,7 @@
 
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
     <style>
         :root { --b:#e5e7eb; --txt:#111827; --muted:#6b7280; --alert:#dc2626; }
         body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;color:var(--txt)}
@@ -54,6 +54,7 @@
     </style>
 </head>
 <body>
+<div th:replace="partials/navbar :: navbar"></div>
 <div class="card">
     <h1>Gestion des apprentis</h1>
     <p class="muted" style="margin-top:-.25rem">Tableau des apprentis sans maître d'apprentissage, création d'un apprenti, import CSV et affectation</p>

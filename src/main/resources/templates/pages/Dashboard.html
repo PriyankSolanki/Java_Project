@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
 
@@ -14,7 +14,7 @@
   <caption th:text="'Promotion ' + ${anneeAcademique.annee}"></caption>
   <thead>
     <tr>
-      <th>#</th>
+      <th>ID</th>
       <th>Prénom</th>
       <th>Nom</th>
       <th></th>
@@ -22,10 +22,10 @@
   </thead>
   <tbody>
     <tr th:each="apprenti : ${apprentis}">
-      <td th:text="${apprenti.id}"></td>
-      <td th:text="${apprenti.prenom}">-</td>
-      <td th:text="${apprenti.nom}">-</td>
-      <td><a th:href="@{/ui/dashboard/apprentice/{id}(id=${apprenti.id})}">détail</a></td>
+      <td th:text="${apprenti.id}" data-label="ID"></td>
+      <td th:text="${apprenti.prenom}" data-label="Prénom">-</td>
+      <td th:text="${apprenti.nom}" data-label="Nom">-</td>
+      <td data-label="Action"><a th:href="@{/ui/dashboard/apprentice/{id}(id=${apprenti.id})}">détail</a></td>
     </tr>
     <tr>
       <td colspan="4" class="no-apprentice" th:if="${#lists.isEmpty(apprentis)}">

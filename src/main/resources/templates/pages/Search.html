@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Recherche</title>
     <link rel="stylesheet" th:href="@{/css/search.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
 
@@ -53,7 +54,7 @@
                 <td th:text="${apprenti.prenom}"></td>
                 <td th:text="${apprenti.nom}"></td>
                 <td th:text="${apprenti.anneeAcademique.annee}"></td>
-                <td><a th:href="@{/apprentice/{id}(id=${apprenti.id})}">Voir</a></td>
+                <td><a th:href="@{/ui/dashboard/apprentice/{id}(id=${apprenti.id})}">Voir</a></td>
             </tr>
             <tr th:if="${#lists.isEmpty(apprentis)}">
                 <td colspan="5" class="no-result">Aucun apprenti trouvé.</td>

@@ -1,114 +1,138 @@
-body {
-    background-color: #f5f7fa;
-    margin: 0;
-    padding: 40px 0;
-    color: #333;
-}
+/* ===============================
+   PAGE APPRENTI - STYLE DASHBOARD FLUIDE
+   =============================== */
 
-h2, h3 {
-    margin-top: 0;
-    color: #007BFF;
-}
-
-.apprentice-infos {
-    background: #fff;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.apprentice-infos:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    text-align: center;
-    font-size: 1.8em;
-    font-weight: 600;
-    margin-bottom: 30px;
-}
-
-h3 {
-    border-left: 4px solid #007BFF;
-    padding-left: 10px;
-    margin-top: 35px;
-    margin-bottom: 15px;
-    font-size: 1.3em;
-    font-weight: 500;
-}
-
-p {
-    margin: 8px 0;
-    font-size: 1.05em;
-    line-height: 1.5;
-}
-
-p span {
-    font-weight: 500;
+html, body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: #f5f7fa;
     color: #222;
 }
 
-.enterprise-infos,
-.supervisor-infos,
-.school-evaluation-infos,
-.defense-infos,
-.visit-infos,
-.mission-infos,
-.tutor-infos {
-    background-color: #f9fbff;
-    border: 1px solid #e3e8f0;
-    border-radius: 8px;
-    padding: 15px 20px;
-    margin-bottom: 20px;
+.apprenti-page {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
 }
 
-.visit {
-    background-color: #fff;
-    border: 1px dashed #cbd5e1;
-    border-radius: 8px;
-    padding: 10px 15px;
-    margin-top: 10px;
-    transition: background 0.2s ease;
+/* --------- En-tête --------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
 
-.visit:hover {
-    background-color: #f3f6fc;
+.page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #111;
 }
 
-.apprentice-infos > p {
-    background-color: #f0f4ff;
-    padding: 10px 12px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-}
-
-@media (max-width: 768px) {
-    body {
-        padding: 20px;
-    }
-
-    .apprentice-infos {
-        padding: 20px;
-    }
-
-    h2 {
-        font-size: 1.5em;
-    }
-
-    p {
-        font-size: 1em;
-    }
-}
-
-a{
+.back-btn {
+    color: #007bff;
     text-decoration: none;
-    color: #007BFF;
+    font-weight: 500;
 }
 
-a:hover{
-    color: #3d9cff;
+.back-btn:hover {
+    color: #0056b3;
+}
+
+/* --------- Sections --------- */
+.info-section {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.info-section h2 {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.4rem;
+}
+
+/* --------- Grille d'informations --------- */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.8rem 1.5rem;
+}
+
+.info-grid div {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #e3e6ea;
+}
+
+.info-grid div span {
+    display: block;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.info-grid div p {
+    font-weight: 500;
+    color: #111;
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+}
+
+.info-grid .full {
+    grid-column: 1 / -1;
+}
+
+/* --------- Cartes de visite --------- */
+.visit-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.visit-card {
+    background: #f9fafc;
+    border: 1px solid #e3e6ea;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.visit-card p {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+}
+
+/* --------- Couleur d'accent par section --------- */
+.enterprise h2 { border-left: 4px solid #0dcaf0; padding-left: 0.6rem; }
+.supervisor h2 { border-left: 4px solid #198754; padding-left: 0.6rem; }
+.evaluation h2 { border-left: 4px solid #ffc107; padding-left: 0.6rem; }
+.soutenance h2 { border-left: 4px solid #6f42c1; padding-left: 0.6rem; }
+.visits h2 { border-left: 4px solid #20c997; padding-left: 0.6rem; }
+.mission h2 { border-left: 4px solid #fd7e14; padding-left: 0.6rem; }
+.tutor h2 { border-left: 4px solid #dc3545; padding-left: 0.6rem; }
+
+/* --------- Responsive --------- */
+@media (max-width: 768px) {
+    .apprenti-page {
+        padding: 0 1rem;
+    }
+
+    .info-section {
+        padding: 1rem 1.2rem;
+    }
+
+    .info-grid div {
+        padding: 0.5rem 0.8rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+    }
 }

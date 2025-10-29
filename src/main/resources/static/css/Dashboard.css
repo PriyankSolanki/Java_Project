@@ -1,20 +1,153 @@
+/* ===============================
+   TABLEAU DASHBOARD - STYLE PRO
+   =============================== */
+
+
+
+
+/* --- Légende du tableau --- */
+caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #003f88;
+    margin-bottom: 1.2rem;
+    width: 100%;
+    max-width: 1100px;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* --- Tableau centré --- */
 table {
-    margin: 20px auto;
+    width: 95%;
+    max-width: 1100px;
+    margin: 0 auto; /* centre horizontalement */
     border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-th, td {
-    border: 1px solid #000000;
-    padding: 10px;
+/* --- En-tête --- */
+thead {
+    background: linear-gradient(135deg, #4A90E2, #325796);
+    color: #fff;
+    border-radius: 15px;
 }
 
-th {
-    background-color: #6e6e6e;
+thead th {
+    text-align: left;
+    padding: 1.1rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Lignes du corps --- */
+tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background 0.2s ease;
+}
+
+tbody td {
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+/* --- Effet au survol --- */
+tbody tr:hover {
+    background-color: #f5f9ff;
+}
+
+/* --- Bouton "détail" --- */
+tbody a {
+    display: inline-block;
+    text-decoration: none;
+    background: #007bff;
     color: white;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+    transition: all 0.25s ease;
 }
 
+tbody a:hover {
+    background: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 86, 179, 0.4);
+    transform: translateY(-1px);
+}
+
+/* --- Message liste vide --- */
 .no-apprentice {
     text-align: center;
+    padding: 1.5rem;
+    color: #666;
     font-style: italic;
-    color: #c40000;
+    background-color: #f9fafb;
+}
+
+/* --- Dernière ligne sans bordure --- */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* --- Animation du tableau entier --- */
+table:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Responsive mobile --- */
+@media (max-width: 768px) {
+    caption {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-radius: 8px;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        border: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #555;
+    }
+
+    tbody td:last-child {
+        border-bottom: none;
+    }
+
+    tbody a {
+        width: fit-content;
+        align-self: flex-end;
+    }
 }

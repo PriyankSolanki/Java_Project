@@ -86,7 +86,7 @@ public class DashboardController {
     }
 
     @GetMapping("/search")
-    public String search(Model model,
+    public String search(Model model, @AuthenticationPrincipal User principal,
                          @RequestParam(required = false) String name,
                          @RequestParam(required = false) String enterprise,
                          @RequestParam(required = false) String promotion,
