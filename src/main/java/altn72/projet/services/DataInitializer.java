@@ -31,7 +31,10 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args){
-
+        if (apprentiRepo.count() > 0) {
+            System.out.println("Tuteur initialisé : login : jaugustin / mdp : password123");
+            return;
+        }
 
         TuteurEnseignant t = new TuteurEnseignant();
         t.setPrenom("admin");
