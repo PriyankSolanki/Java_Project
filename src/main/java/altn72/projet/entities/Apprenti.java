@@ -22,25 +22,25 @@ public class Apprenti {
     private String anneeLevel;
     private String etat;
 
-    @ManyToOne(cascade =CascadeType.MERGE)
+    @ManyToOne(cascade =CascadeType.MERGE, fetch = FetchType.EAGER)
     private Entreprise entreprise;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     private MaitreApprentissage maitreApprentissage;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     private AnneeAcademique anneeAcademique;
 
     @ManyToOne
     private TuteurEnseignant tuteurEnseignant;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private EvaluationEcole evaluationEcole;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Soutenance soutenance;
 
-    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Visite> visites;
 
     @Embedded
