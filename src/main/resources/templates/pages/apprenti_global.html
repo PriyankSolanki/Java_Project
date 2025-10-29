@@ -2,7 +2,7 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Gestion apprentis</title>
+    <title>Gestion apprentis & entreprises</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -64,6 +64,9 @@
         <button class="tab-btn active" data-tab="tab-dashboard" role="tab" aria-controls="tab-dashboard">Apprentis sans maître d'apprentissage</button>
         <button class="tab-btn" data-tab="tab-create" role="tab" aria-controls="tab-create">Créer un apprenti</button>
         <button class="tab-btn" data-tab="tab-affect" role="tab" aria-controls="tab-affect">Affecter un apprenti</button>
+        <!-- Nouveaux onglets Entreprises -->
+        <button class="tab-btn" data-tab="tab-ent-list" role="tab" aria-controls="tab-ent-list">Entreprises</button>
+        <button class="tab-btn" data-tab="tab-ent-create" role="tab" aria-controls="tab-ent-create">Créer une entreprise</button>
     </div>
 
     <!-- SECTION 1 : DASHBOARD SANS MAÎTRE -->
@@ -260,6 +263,59 @@
 
         <div id="aff_toastOk" class="toast ok"></div>
         <div id="aff_toastErr" class="toast err"></div>
+    </section>
+
+    <!-- SECTION 4 : ENTREPRISES (LISTE) -->
+    <section id="tab-ent-list" class="section" role="tabpanel">
+        <div class="toolbar">
+            <h2 style="margin:.25rem 0">Entreprises</h2>
+            <input id="ent_q" type="search" placeholder="Rechercher (raison sociale, adresse)…">
+        </div>
+
+        <div id="ent_empty" class="muted" style="display:none;border:1px dashed var(--b);border-radius:10px;padding:1rem">
+            Aucune entreprise pour le moment.
+        </div>
+
+        <table id="ent_tbl" style="display:none">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Raison sociale</th>
+                <th>Adresse</th>
+                <th>Infos d’accès</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <!-- SECTION 5 : ENTREPRISES (CRÉATION) -->
+    <section id="tab-ent-create" class="section" role="tabpanel">
+        <h2 style="margin:.25rem 0 .5rem">Créer une entreprise</h2>
+        <p><small class="muted">Les champs marqués * sont obligatoires.</small></p>
+
+        <div class="grid" style="margin-top:1rem">
+            <div style="grid-column:1/3">
+                <label for="ent_raison">Raison sociale *</label>
+                <input id="ent_raison" placeholder="Ex: ACME SAS">
+            </div>
+            <div style="grid-column:1/3">
+                <label for="ent_adresse">Adresse</label>
+                <textarea id="ent_adresse" placeholder="Numéro, rue, ville…"></textarea>
+            </div>
+            <div style="grid-column:1/3">
+                <label for="ent_infos">Infos d’accès</label>
+                <textarea id="ent_infos" placeholder="Badge, étage, instructions…"></textarea>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem">
+            <button class="primary" id="ent_btnSave">Enregistrer</button>
+            <button class="muted" type="button" id="ent_btnReset">Réinitialiser</button>
+        </div>
+
+        <div id="ent_ok" class="toast ok"></div>
+        <div id="ent_err" class="toast err"></div>
     </section>
 </div>
 
@@ -518,6 +574,103 @@
             }
         } catch(e){ show(a_err, `Erreur réseau : ${e.message}`); }
     });
+
+    /* ===================== ENTREPRISES ===================== */
+    // Éléments
+    const ent_ok   = document.getElementById('ent_ok');
+    const ent_err  = document.getElementById('ent_err');
+    const ent_q    = document.getElementById('ent_q');
+    const ent_tbl  = document.getElementById('ent_tbl');
+    const ent_tbody= ent_tbl ? ent_tbl.querySelector('tbody') : null;
+    const ent_empty= document.getElementById('ent_empty');
+
+    function ent_escapeHtml(s){ return String(s ?? '').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m])); }
+
+    async function ent_loadList(){
+        if(!ent_tbl || !ent_empty) return;
+        try{
+            const res = await fetch('/api/entreprises', { headers: withCsrf() });
+            if(!res.ok){ ent_tbl.style.display='none'; ent_empty.style.display='block'; return; }
+            const data = await res.json();
+            ent_renderList(Array.isArray(data) ? data : []);
+        }catch(_){
+            ent_tbl.style.display='none';
+            ent_empty.style.display='block';
+        }
+    }
+
+    function ent_renderList(rows){
+        if(!ent_tbody) return;
+        ent_tbody.innerHTML = rows.map(e => `
+            <tr>
+                <td>${e.id ?? ''}</td>
+                <td>${ent_escapeHtml(e.raisonSociale)}</td>
+                <td>${ent_escapeHtml(e.adresse) || '—'}</td>
+                <td>${ent_escapeHtml(e.infosAcces) || '—'}</td>
+            </tr>
+        `).join('');
+        const has = rows.length > 0;
+        ent_tbl.style.display = has ? 'table' : 'none';
+        ent_empty.style.display = has ? 'none' : 'block';
+        ent_applyFilter();
+    }
+
+    function ent_applyFilter(){
+        const term = (ent_q?.value || '').toLowerCase().trim();
+        if(!ent_tbody) return;
+        Array.from(ent_tbody.querySelectorAll('tr')).forEach(tr=>{
+            tr.style.display = tr.innerText.toLowerCase().includes(term) ? '' : 'none';
+        });
+    }
+    ent_q?.addEventListener('input', ent_applyFilter);
+
+    // Création entreprise
+    document.getElementById('ent_btnSave')?.addEventListener('click', async () => {
+        const raison  = document.getElementById('ent_raison').value.trim();
+        const adresse = document.getElementById('ent_adresse').value.trim();
+        const infos   = document.getElementById('ent_infos').value.trim();
+
+        if(!raison){ show(ent_err, 'La raison sociale est obligatoire.'); return; }
+
+        try{
+            const res = await fetch('/api/entreprises', {
+                method: 'POST',
+                headers: withCsrf({'Content-Type':'application/json'}),
+                body: JSON.stringify({
+                    raisonSociale: raison,
+                    adresse: adresse || null,
+                    infosAcces: infos || null
+                })
+            });
+
+            if(res.ok || res.status===201){
+                const dto = await res.json().catch(()=>null);
+                show(ent_ok, `Entreprise créée${dto?.id ? ' (#'+dto.id+')' : ''}.`);
+                document.getElementById('ent_raison').value='';
+                document.getElementById('ent_adresse').value='';
+                document.getElementById('ent_infos').value='';
+                // rafraîchir la liste si l'onglet liste est visible
+                const entListActive = document.getElementById('tab-ent-list')?.classList.contains('active');
+                if(entListActive){ ent_loadList(); }
+            } else {
+                const txt = await res.text();
+                show(ent_err, `Erreur ${res.status} : ${txt || 'création impossible'}`);
+            }
+        }catch(e){
+            show(ent_err, 'Erreur réseau : ' + e.message);
+        }
+    });
+
+    document.getElementById('ent_btnReset')?.addEventListener('click', () => {
+        ['ent_raison','ent_adresse','ent_infos'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+    });
+
+    // Hook : charger la liste quand on affiche l'onglet "Entreprises"
+    const _origShowTab = showTab;
+    showTab = function(id){
+        _origShowTab(id);
+        if(id === 'tab-ent-list'){ ent_loadList(); }
+    };
 </script>
 </body>
 </html>
