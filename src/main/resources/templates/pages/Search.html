@@ -15,7 +15,7 @@
     <form th:action="@{/ui/dashboard/search}" method="get" class="search-form">
         <div class="form-group">
             <label for="name">Nom :</label>
-            <input type="text" id="name" name="name" placeholder="Ex : Lucas" />
+            <input type="text" id="name" name="name" placeholder="Ex : Lucas Dubois" />
         </div>
 
         <div class="form-group">
@@ -45,6 +45,8 @@
                 <th>Prénom</th>
                 <th>Nom</th>
                 <th>Promotion</th>
+                <th>Entreprise</th>
+                <th>Mots-clés</th>
                 <th>Détail</th>
             </tr>
             </thead>
@@ -53,7 +55,9 @@
                 <td th:text="${apprenti.id}"></td>
                 <td th:text="${apprenti.prenom}"></td>
                 <td th:text="${apprenti.nom}"></td>
-                <td th:text="${apprenti.anneeAcademique.annee}"></td>
+                <td th:text="${apprenti.anneeAcademique != null ? apprenti.anneeAcademique.annee : '-'}"></td>
+                <td th:text="${apprenti.entreprise != null ? apprenti.entreprise.raisonSociale : '-'}"></td>
+                <td th:text="${apprenti.mission != null ? apprenti.mission.motsCles : '-'}"></td>
                 <td><a th:href="@{/ui/dashboard/apprentice/{id}(id=${apprenti.id})}">Voir</a></td>
             </tr>
             <tr th:if="${#lists.isEmpty(apprentis)}">
