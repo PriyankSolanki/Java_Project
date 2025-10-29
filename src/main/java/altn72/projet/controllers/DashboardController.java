@@ -96,6 +96,9 @@ public class DashboardController {
 
     @PostMapping("apprentice/edit")
     public String saveApprenti(@ModelAttribute Apprenti apprenti) {
+        if (apprenti.getVisites() != null) {
+            apprenti.getVisites().forEach(v -> v.setApprenti(apprenti));
+        }
         apprentiRepo.save(apprenti);
         return "redirect:/ui/dashboard/apprentice/" + apprenti.getId();
     }

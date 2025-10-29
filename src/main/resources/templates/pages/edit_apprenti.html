@@ -37,7 +37,7 @@
         </section>
 
         <!-- SECTION 2 : Entreprise -->
-        <section class="info-section enterprise" th:if="${apprenti.entreprise != null}">
+        <section class="info-section enterprise">
             <h2>Entreprise</h2>
             <div class="info-grid">
                 <input type="hidden" th:field="*{entreprise.id}" />
@@ -48,7 +48,7 @@
         </section>
 
         <!-- SECTION 3 : Maître d’apprentissage -->
-        <section class="info-section supervisor" th:if="${apprenti.maitreApprentissage != null}">
+        <section class="info-section supervisor">
             <h2>Maître d’apprentissage</h2>
             <div class="info-grid">
                 <input type="hidden" th:field="*{maitreApprentissage.id}" />
@@ -82,6 +82,32 @@
             </div>
         </section>
 
+        <section class="info-section visits">
+            <h2>Visite(s)</h2>
+
+            <div class="visit-cards" id="visitContainer" >
+                <div class="visit-card info-grid" th:each="visit, iterStat : ${apprenti.visites}">
+                    <input type="hidden" th:field="*{visites[__${iterStat.index}__].id}" />
+                    <button type="button" class="remove-visit-btn">🗑️ Supprimer</button>
+                    <div>
+                        <span>Date</span>
+                        <input type="date" th:field="*{visites[__${iterStat.index}__].date}" />
+                    </div>
+                    <div>
+                        <span>Format</span>
+                        <input type="text" th:field="*{visites[__${iterStat.index}__].format}" placeholder="Présentiel / Distanciel" />
+                    </div>
+                    <div class="full">
+                        <span>Commentaire</span>
+                        <textarea th:field="*{visites[__${iterStat.index}__].commentaires}" rows="3" style="resize:none;"></textarea>
+                    </div>
+
+                    <hr/>
+                </div>
+            </div>
+            <button type="button" id="addVisitBtn" class="btn-add">+ Ajouter une visite</button>
+        </section>
+
         <!-- SECTION 6 : Mission -->
         <section class="info-section mission">
             <h2>Mission</h2>
@@ -108,3 +134,40 @@
 </main>
 </body>
 </html>
+
+<script>
+    document.getElementById("addVisitBtn").addEventListener("click", function () {
+        const container = document.getElementById("visitContainer");
+        const index = container.querySelectorAll(".visit-card" ).length;
+
+        const newVisit = document.createElement("div");
+        newVisit.classList.add("visit-card");
+        newVisit.classList.add("info-grid");
+
+        newVisit.innerHTML = `
+        <button type="button" class="remove-visit-btn">🗑️ Supprimer</button>
+        <div>
+            <span>Date</span>
+            <input name="visites[${index}].date" type="date"/>
+        </div>
+        <div>
+            <span>Format</span>
+            <input name="visites[${index}].format" type="text" placeholder="Présentiel / Distanciel"/>
+        </div>
+        <div class="full">
+            <span>Commentaire</span>
+            <textarea name="visites[${index}].commentaires" rows="3" style="resize:none;"></textarea>
+        </div>
+        <hr/>
+    `;
+        container.appendChild(newVisit);
+    });
+
+    document.addEventListener("click", e => {
+        if (e.target.classList.contains("remove-visit-btn")) {
+            e.target.closest(".visit-card").remove();
+        }
+    });
+
+</script>
+
