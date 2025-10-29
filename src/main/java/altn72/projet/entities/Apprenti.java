@@ -34,10 +34,10 @@ public class Apprenti {
     @ManyToOne
     private TuteurEnseignant tuteurEnseignant;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(cascade = CascadeType.MERGE)
     private EvaluationEcole evaluationEcole;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(cascade = CascadeType.MERGE)
     private Soutenance soutenance;
 
     @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)

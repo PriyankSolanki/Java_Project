@@ -90,6 +90,30 @@ public class DataInitializer implements CommandLineRunner {
         maitre2.setPoste("Chef de projet");
         maitreRepo.save(maitre2);
 
+        Soutenance soutenance1 = new Soutenance();
+        soutenance1.setDate(LocalDate.of(2025, 11, 20));
+        soutenance1.setNoteFinale(17.0);
+        soutenance1.setCommentaires("Présentation claire et structurée");
+        soutenanceRepo.save(soutenance1);
+
+        Soutenance soutenance2 = new Soutenance();
+        soutenance2.setDate(LocalDate.of(2025, 11, 22));
+        soutenance2.setNoteFinale(15.0);
+        soutenance2.setCommentaires("Bonne présentation mais manque de détails techniques");
+        soutenanceRepo.save(soutenance2);
+
+        EvaluationEcole eval1 = new EvaluationEcole();
+        eval1.setTheme("Rapport DevOps");
+        eval1.setNoteFinale(16.5);
+        eval1.setCommentaires("Excellent travail, bonne méthodologie");
+        evalRepo.save(eval1);
+
+        EvaluationEcole eval2 = new EvaluationEcole();
+        eval2.setTheme("Projet Node.js");
+        eval2.setNoteFinale(14.0);
+        eval2.setCommentaires("Travail correct mais à améliorer");
+        evalRepo.save(eval2);
+
         Apprenti apprenti1 = new Apprenti();
         apprenti1.setNom("Leclerc");
         apprenti1.setPrenom("Sophie");
@@ -100,6 +124,8 @@ public class DataInitializer implements CommandLineRunner {
         apprenti1.setMaitreApprentissage(maitre1);
         apprenti1.setTuteurEnseignant(tuteur);
         apprenti1.setAnneeAcademique(annee2025);
+        apprenti1.setSoutenance(soutenance1);
+        apprenti1.setEvaluationEcole(eval1);
         apprenti1.setEtat("ACTIF");
 
         Mission mission1 = new Mission();
@@ -120,6 +146,8 @@ public class DataInitializer implements CommandLineRunner {
         apprenti2.setMaitreApprentissage(maitre2);
         apprenti2.setTuteurEnseignant(tuteur);
         apprenti2.setAnneeAcademique(annee2025);
+        apprenti2.setSoutenance(soutenance2);
+        apprenti2.setEvaluationEcole(eval2);
         apprenti2.setEtat("ACTIF");
 
         Mission mission2 = new Mission();
@@ -144,33 +172,9 @@ public class DataInitializer implements CommandLineRunner {
         visite2.setCommentaires("Besoin d'accompagnement supplémentaire");
         visiteRepo.save(visite2);
 
-        EvaluationEcole eval1 = new EvaluationEcole();
-        eval1.setApprenti(apprenti1);
-        eval1.setTheme("Rapport DevOps");
-        eval1.setNoteFinale(16.5);
-        eval1.setCommentaires("Excellent travail, bonne méthodologie");
-        evalRepo.save(eval1);
 
-        EvaluationEcole eval2 = new EvaluationEcole();
-        eval2.setApprenti(apprenti2);
-        eval2.setTheme("Projet Node.js");
-        eval2.setNoteFinale(14.0);
-        eval2.setCommentaires("Travail correct mais à améliorer");
-        evalRepo.save(eval2);
 
-        Soutenance soutenance1 = new Soutenance();
-        soutenance1.setApprenti(apprenti1);
-        soutenance1.setDate(LocalDate.of(2025, 11, 20));
-        soutenance1.setNoteFinale(17.0);
-        soutenance1.setCommentaires("Présentation claire et structurée");
-        soutenanceRepo.save(soutenance1);
 
-        Soutenance soutenance2 = new Soutenance();
-        soutenance2.setApprenti(apprenti2);
-        soutenance2.setDate(LocalDate.of(2025, 11, 22));
-        soutenance2.setNoteFinale(15.0);
-        soutenance2.setCommentaires("Bonne présentation mais manque de détails techniques");
-        soutenanceRepo.save(soutenance2);
 
         System.out.println("Base de données initialisée avec succès !");
     }
