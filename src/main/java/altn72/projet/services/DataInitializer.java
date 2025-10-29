@@ -3,6 +3,7 @@ package altn72.projet.services;
 
 import altn72.projet.repositories.*;
 import altn72.projet.entities.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;
@@ -10,62 +11,34 @@ import java.time.LocalDate;
 @Component
 public class DataInitializer implements CommandLineRunner {
 
-    private final TuteurEnseignantRepository tuteurRepo;
-    private final ApprentiRepository apprentiRepo;
-    private final EntrepriseRepository entrepriseRepo;
-    private final MaitreApprentissageRepository maitreRepo;
-    private final AnneeAcademiqueRepository anneeRepo;
-    private final VisiteRepository visiteRepo;
-    private final EvaluationEcoleRepository evalRepo;
-    private final SoutenanceRepository soutenanceRepo;
-    private final TuteurService tuteurService;
+    @Autowired
+    private ApprentiRepository apprentiRepo;
+    @Autowired
+    private EntrepriseRepository entrepriseRepo;
+    @Autowired
+    private MaitreApprentissageRepository maitreRepo;
+    @Autowired
+    private AnneeAcademiqueRepository anneeRepo;
+    @Autowired
+    private VisiteRepository visiteRepo;
+    @Autowired
+    private EvaluationEcoleRepository evalRepo;
+    @Autowired
+    private SoutenanceRepository soutenanceRepo;
+    @Autowired
+    private TuteurService tuteurService;
 
-    public DataInitializer(TuteurEnseignantRepository tuteurRepo,
-                           ApprentiRepository apprentiRepo,
-                           EntrepriseRepository entrepriseRepo,
-                           MaitreApprentissageRepository maitreRepo,
-                           AnneeAcademiqueRepository anneeRepo,
-                           VisiteRepository visiteRepo,
-                           EvaluationEcoleRepository evalRepo,
-                           SoutenanceRepository soutenanceRepo,TuteurService tuteurService) {
-        this.tuteurRepo = tuteurRepo;
-        this.apprentiRepo = apprentiRepo;
-        this.entrepriseRepo = entrepriseRepo;
-        this.maitreRepo = maitreRepo;
-        this.anneeRepo = anneeRepo;
-        this.visiteRepo = visiteRepo;
-        this.evalRepo = evalRepo;
-        this.soutenanceRepo = soutenanceRepo;
-        this.tuteurService=tuteurService;
-    }
 
     @Override
     public void run(String... args){
 
-        if (tuteurRepo.count() > 0) {
-            System.out.println("Base déjà initialisée, aucune action effectuée.");
-            System.out.println("Tuteur initialisé : admin123 / 000000");
-            return;
-        }
 
-            TuteurEnseignant t = new TuteurEnseignant();
-            t.setPrenom("admin");
-            t.setNom("admin");
-            t.setLogin("admin123");
-            t.setMotDePasse("000000");
-            tuteurService.saveTuteur(t);
-            System.out.println("Tuteur initialisé : admin123 / 000000");
-
-
-        AnneeAcademique annee2025 = new AnneeAcademique();
-        annee2025.setAnnee("2025-2026");
-        annee2025.setActive(true);
-        anneeRepo.save(annee2025);
-
-        AnneeAcademique annee2024 = new AnneeAcademique();
-        annee2024.setAnnee("2024-2025");
-        annee2024.setActive(false);
-        anneeRepo.save(annee2024);
+        TuteurEnseignant t = new TuteurEnseignant();
+        t.setPrenom("admin");
+        t.setNom("admin");
+        t.setLogin("admin123");
+        t.setMotDePasse("000000");
+        tuteurService.saveTuteur(t);
 
         TuteurEnseignant tuteur = new TuteurEnseignant();
         tuteur.setPrenom("Jacques");
@@ -73,7 +46,18 @@ public class DataInitializer implements CommandLineRunner {
         tuteur.setLogin("jaugustin");
         tuteur.setMotDePasse("password123");
         tuteur.setEmail("jacques.augustin@efrei.fr");
-        tuteurRepo.save(tuteur);
+        tuteurService.saveTuteur(tuteur);
+
+        AnneeAcademique annee2025 = new AnneeAcademique();
+        annee2025.setAnnee("2025-2026");
+        annee2025.setActive(true);
+        annee2025 = anneeRepo.save(annee2025);
+
+        AnneeAcademique annee2024 = new AnneeAcademique();
+        annee2024.setAnnee("2024-2025");
+        annee2024.setActive(false);
+        anneeRepo.save(annee2024);
+
 
         Entreprise entreprise1 = new Entreprise();
         entreprise1.setRaisonSociale("TechCorp");

@@ -22,16 +22,16 @@ public class Apprenti {
     private String anneeLevel;
     private String etat;
 
-    @ManyToOne(cascade ={CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade =CascadeType.MERGE)
     private Entreprise entreprise;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     private MaitreApprentissage maitreApprentissage;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     private AnneeAcademique anneeAcademique;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private TuteurEnseignant tuteurEnseignant;
 
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
