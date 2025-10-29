@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/ui/dashboard")
@@ -49,6 +50,7 @@ public class DashboardController {
 
         List<Apprenti> apprentisActive = apprentisTuteurEnseignant.stream()
                 .filter(apprenti -> apprenti.getAnneeAcademique().isActive())
+                .filter(apprenti -> Objects.equals(apprenti.getEtat(), "ACTIF"))
                 .toList();
 
         List<AnneeAcademique> anneeAcademiques = anneeAcademiqueService.getAll();
