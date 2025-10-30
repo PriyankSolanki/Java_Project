@@ -22,10 +22,12 @@ public class ApprentiCommandService {
     private TuteurEnseignantRepository tuteurRepo;
     @Autowired
     private AnneeAcademiqueRepository anneeRepo;
+    @Autowired
+    private AnneeAcademiqueRepository anneeAcademiqueRepository;
 
 
     @Transactional
-    public Apprenti create(ApprentiCreateRequest req) {
+    public Apprenti create(ApprentiCreateRequest req, TuteurEnseignant tuteurEnseignant) {
         Apprenti a = new Apprenti();
         a.setPrenom(req.prenom());
         a.setNom(req.nom());
@@ -54,12 +56,18 @@ public class ApprentiCommandService {
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Tuteur " + req.tuteurId() + " introuvable"));
             a.setTuteurEnseignant(t);
+        }else{
+            a.setTuteurEnseignant(tuteurEnseignant);
         }
+
         if (req.anneeAcademiqueId() != null) {
             AnneeAcademique an = anneeRepo.findById(req.anneeAcademiqueId())
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND, "Année " + req.anneeAcademiqueId() + " introuvable"));
             a.setAnneeAcademique(an);
+        }else{
+            AnneeAcademique anneeAcademique = anneeAcademiqueRepository.findFirstByActive(true);
+            a.setAnneeAcademique(anneeAcademique);
         }
 
         return apprentiRepo.save(a);

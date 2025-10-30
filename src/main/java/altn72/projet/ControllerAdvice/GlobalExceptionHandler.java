@@ -1,5 +1,7 @@
-package altn72.projet.api;
+package altn72.projet.ControllerAdvice;
 
+import altn72.projet.api.ApiError;
+import altn72.projet.api.FieldViolation;
 import altn72.projet.exceptions.ApprentiNotFoundException;
 import altn72.projet.exceptions.TuteurEnseignantNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;

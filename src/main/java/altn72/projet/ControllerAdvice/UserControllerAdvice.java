@@ -1,4 +1,4 @@
-package altn72.projet.controllers;
+package altn72.projet.ControllerAdvice;
 
 import altn72.projet.entities.TuteurEnseignant;
 import altn72.projet.exceptions.TuteurEnseignantNotFoundException;

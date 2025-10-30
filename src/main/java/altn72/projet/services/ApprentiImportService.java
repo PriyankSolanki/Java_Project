@@ -2,6 +2,7 @@ package altn72.projet.services;
 
 import altn72.projet.dto.ApprentiCreateRequest;
 import altn72.projet.dto.ImportCsvReport;
+import altn72.projet.entities.TuteurEnseignant;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.apache.commons.csv.CSVFormat;
@@ -24,7 +25,7 @@ public class ApprentiImportService {
     @Autowired
     private Validator validator;
 
-    public ImportCsvReport importCsv(MultipartFile file) throws Exception {
+    public ImportCsvReport importCsv(MultipartFile file, TuteurEnseignant tuteurEnseignant) throws Exception {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Fichier CSV manquant ou vide.");
         }
@@ -78,7 +79,7 @@ public class ApprentiImportService {
                         continue;
                     }
 
-                    var created = commandService.create(req);
+                    var created = commandService.create(req,tuteurEnseignant);
 
                     report.success++;
 
