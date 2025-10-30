@@ -12,7 +12,12 @@ Nous avons utilisé comme SGBD :
 - PostgreSQL, MariaDB et MySQL
 
 ### 3.3 -
+Nous avons héberger notre site avec Render : 
 Url d'accès du site hébergé : https://java-project-bt1s.onrender.com/login
+
+GitHub (code source) : 
+Repo git : https://github.com/PriyankSolanki/Java_Project.git
+Branche à utiliser : main
 Url d'accès du site en local : http://localhost:8080/login
 
 La base de données est hébergé vie Supabase, mais si vous voulez utiliser une base de données locale, vous pouvez changer les paramètres dans application.properties.
