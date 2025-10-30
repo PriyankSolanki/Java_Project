@@ -46,10 +46,7 @@ public class Apprenti {
     @Embedded
     private Mission mission;
 
-    @Lob
     private String remarques;
-
-    @Lob
     private String feedbackTuteurEnseignant;
 
 }
