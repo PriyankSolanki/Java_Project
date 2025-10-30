@@ -35,7 +35,7 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
             @Param("promotion") String promotion,
             @Param("keywords") String keywords);
 
-    @Query(value = "SELECT * FROM apprenti WHERE etat = 'ACTIF'", nativeQuery = true)
+    @Query(value = "SELECT * FROM javaproject.apprenti WHERE etat = 'ACTIF'", nativeQuery = true)
     List<Apprenti> getApprentisActifs();
 
 }
