@@ -34,9 +34,14 @@ public class ApprentiCommandService {
         a.setEmail(req.email());
         a.setTelephone(req.telephone());
         a.setAdresse(req.adresse());
-        a.setEtat(req.etat());
+        if(req.etat() == null){
+            a.setEtat("ACTIF");
+        }else{
+            a.setEtat(req.etat());
+        }
         a.setAnneeLevel(req.anneeLevel());
         a.setRemarques(req.remarques());
+
         a.setFeedbackTuteurEnseignant(req.feedbackTuteurEnseignant());
 
         if (req.entrepriseId() != null) {
