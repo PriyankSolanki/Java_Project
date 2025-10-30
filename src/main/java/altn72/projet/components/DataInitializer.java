@@ -114,6 +114,7 @@ public class DataInitializer implements CommandLineRunner {
         apprenti1.setTelephone("0611223344");
         apprenti1.setAdresse("5 rue Victor Hugo, 75005 Paris");
         apprenti1.setEntreprise(entreprise1);
+        apprenti1.setAnneeLevel("I2");
         apprenti1.setMaitreApprentissage(maitre1);
         apprenti1.setTuteurEnseignant(tuteur);
         apprenti1.setAnneeAcademique(annee2025);
@@ -136,6 +137,7 @@ public class DataInitializer implements CommandLineRunner {
         apprenti2.setTelephone("0622334455");
         apprenti2.setAdresse("12 avenue de la République, 75011 Paris");
         apprenti2.setEntreprise(entreprise2);
+        apprenti2.setAnneeLevel("I2");
         apprenti2.setMaitreApprentissage(maitre2);
         apprenti2.setTuteurEnseignant(tuteur);
         apprenti2.setAnneeAcademique(annee2025);
