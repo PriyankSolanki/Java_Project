@@ -22,22 +22,53 @@ public class AnneeAcademiqueService {
         return anneeAcademiqueRepository.findAll();
     }
 
-    public AnneeAcademique creerNouvelleAnnee(String annee) {
 
+    private String genererNouvelleAnnee() {
+        AnneeAcademique derniere = anneeAcademiqueRepository.findTopByOrderByAnneeDesc();
+
+        if (derniere == null) {
+            throw new IllegalArgumentException("Aucune année existante. Créez la première manuellement.");
+        }
+
+        String[] parts = derniere.getAnnee().split("-");
+        try {
+            int debut = Integer.parseInt(parts[0].trim());
+            int fin = Integer.parseInt(parts[1].trim());
+            return (debut + 1) + "-" + (fin + 1);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Format d'année invalide : " + derniere.getAnnee());
+        }
+    }
+
+
+    public AnneeAcademique creerNouvelleAnnee() {
+        AnneeAcademique derniere = anneeAcademiqueRepository.findTopByOrderByAnneeDesc();
+
+        if (derniere == null) {
+            throw new IllegalArgumentException("Aucune année trouvée. Créez d'abord la première manuellement.");
+        }
+
+        String nouvelleAnnee = genererNouvelleAnnee();
+
+        if (anneeAcademiqueRepository.existsByAnnee(nouvelleAnnee)) {
+            throw new IllegalArgumentException("L'année " + nouvelleAnnee + " existe déjà !");
+        }
+
+        //desactive l’ancienne annee
+        derniere.setActive(false);
+        anneeAcademiqueRepository.save(derniere);
+
+        // cree la nouvelle année active
         AnneeAcademique nouvelle = new AnneeAcademique();
-        nouvelle.setAnnee(annee);
+        nouvelle.setAnnee(nouvelleAnnee);
+        nouvelle.setActive(true);
         anneeAcademiqueRepository.save(nouvelle);
 
-
-        List<Apprenti> apprentis = apprentiRepository.findByEtatNot("archivé");
+        List<Apprenti> apprentis = apprentiRepository.findByEtatNot("INACTIF");
 
         for (Apprenti a : apprentis) {
             String niveau = a.getAnneeLevel();
-
-            if (niveau == null) {
-                // on ignore les apprentis sans niveau défini
-                continue;
-            }
+            if (niveau == null) continue;
 
             switch (niveau) {
                 case "I1":
@@ -50,13 +81,10 @@ public class AnneeAcademiqueService {
                     break;
                 case "I3":
                     a.setEtat("INACTIF");
-                    a.setAnneeLevel("I");
                     break;
             }
-
             apprentiRepository.save(a);
         }
-
 
         return nouvelle;
     }

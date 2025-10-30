@@ -153,6 +153,28 @@ tbody a:hover {
         width: 100%;
     }
 }
+.alert {
+    width: 95%;
+    max-width: 1100px;
+    margin: 1rem auto;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #e7f6ee;
+    color: #1b7d3a;
+    border: 1px solid #a9dfbf;
+}
+
+.alert-error {
+    background-color: #fdecea;
+    color: #a33a2f;
+    border: 1px solid #f5b7b1;
+}
 
 /* --- Message liste vide --- */
 .no-apprentice {
