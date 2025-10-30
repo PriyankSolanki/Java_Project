@@ -8,6 +8,6 @@ RUN mvn clean package -DskipTests
 # Étape 2 : Image finale légère avec Java uniquement
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=build /app/target/TP_fil_rouge-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/Java_project-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
