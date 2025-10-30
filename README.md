@@ -34,6 +34,11 @@ L’application permet :
 
 ---
 
+## 💿 Hébergement
+
+Notre application est directement hébergé au lien : 
+- (mettre le lien)
+
 ## ⚙️ Configuration du projet
 
 ### 🧩 Prérequis
@@ -51,10 +56,16 @@ mvn spring-boot:run
 ```
 
 ### 🧩 Base de données
-La base de données est hébergé via avec Supabase.
-Des données de tests sont déjà présentes.
+La base de données est hébergé via avec Supabase. Des données de tests sont déjà présentes.
+
+Mais si vous voulez utiliser une base de données à vous : changer directement les liens présents dans le fichier : 
+- application.properties
+
+De plus, un script SQL est présent à la racine du projet permettant de créer la base de données. Nom du fichier : 
+- script_database.sql
 
 ### 🔓API Swagger
+Un swagger est présent permettant de voir toutes les routes commandes de notre application, lien : (nécessite une connexion utilisateur)
 ```
 http://localhost:8080/swagger-ui/index.html
 ```

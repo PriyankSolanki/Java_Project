@@ -12,24 +12,29 @@ Nous avons utilisé comme SGBD :
 - PostgreSQL, MariaDB et MySQL
 
 ### 3.3 -
-Url d'accès générique : //site web pas encore héberger
-Url d'accès local : http://localhost:8080/login
+Url d'accès du site hébergé : //site web pas encore héberger
+Url d'accès du site en local : http://localhost:8080/login
+
+La base de données est hébergé vie Supabase, mais si vous voulez utiliser une base de données locale, vous pouvez changer les paramètres dans application.properties.
+La base de données se créé et des données de tests s'insèrent automatiquement lors du premier lancement.
+De plus un scrip sql script_database.sql est disponible à la racine du projet.
+Un fichier CSV est disponible à la racine du projet pour vous permettre de tester l'ajout des apprenties via csv.
 
 ### 3.4 -
 #### a -
-Nous pensons que la méthode avec laquelle nous avons travaillé était intéressante. Diviser les taches pour avancer ensemble sur nos différents outils a permis de nous faire gagner du temps, et d'avancer pleinement sur nos fonctionnalités.
+Nous pensons que la méthode avec laquelle nous avons travaillé était intéressante. Diviser les tâches pour avancer ensemble sur nos différents outils a permis de nous faire gagner du temps, et d'avancer pleinement sur nos fonctionnalités.
 
 #### b -
-La gande difficulté que nous avons rencontré à été le merge de toutes nos parties. Une bonne communication et un travail rigoureux de tous les membres du groupe nous a aidé à surmonter cette difficulté.
+La grande difficulté que nous avons rencontrée a été le merge de toutes nos parties. Une bonne communication et un travail rigoureux de tous les membres du groupe nous a aidé à surmonter cette difficulté.
 
 #### c -
 Nous nous sommes rapidement bien répartis et équitablement le travail dans ce projet. Chaque personne au sein du groupe à grandement contribué au fonctionnement de l'application.
 
 #### d -
 Les 3 points qui nous ont marqué pendant ce cours sont :  
-- La clareté des TP, et le suivit du TP fil rouge était une approche très intéressante et nous a bien aidé à comprendre le fonctionnement d'un projet JAVA.  
+- La clarter des TP, et le suivit du TP fil rouge était une approche très intéressante et nous a bien aidé à comprendre le fonctionnement d'un projet JAVA.  
 - Le projet est bien adapté aux cours et nous permet d'exploiter et de développer nos connaissances en plus de nous laisser une liberté pour en avoir de nouvelles.
-- Les Quizz ont été un bon moyen d'évaluer nos connaissances, sans nous contraindre à écrire du code sur papier.
+- Les Quiz ont été un bon moyen d'évaluer nos connaissances, sans nous contraindre à écrire du code sur papier.
 
 #### e -
 Nous pensons qu'avec plus de temps, nous aurions pu perfectionner l'IHM. Cependant, étant en période de fin de modules, nous avons beaucoup de travail personnel à réaliser au niveau de l'école, donc nous avons voulu prioriser le fonctionnement pur de l'application. Nous aurions aimer développer et améliorer d'avantage de fonctionnalitées mais le temps nous à manquer...
