@@ -22,22 +22,22 @@ public class Apprenti {
     private String anneeLevel;
     private String etat;
 
-    @ManyToOne(cascade =CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne(cascade =CascadeType.MERGE)
     private Entreprise entreprise;
 
-    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private MaitreApprentissage maitreApprentissage;
 
-    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private AnneeAcademique anneeAcademique;
 
     @ManyToOne
     private TuteurEnseignant tuteurEnseignant;
 
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE)
     private EvaluationEcole evaluationEcole;
 
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE)
     private Soutenance soutenance;
 
     @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
