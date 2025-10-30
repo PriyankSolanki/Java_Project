@@ -1,8 +1,12 @@
 package altn72.projet.repositories;
 
 import altn72.projet.entities.AnneeAcademique;
+import altn72.projet.entities.Apprenti;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AnneeAcademiqueRepository extends JpaRepository<AnneeAcademique, Long> {
+import java.util.List;
 
+public interface AnneeAcademiqueRepository extends JpaRepository<AnneeAcademique, Long> {
+    boolean existsByAnnee(String annee);
+    AnneeAcademique findTopByOrderByAnneeDesc();
 }

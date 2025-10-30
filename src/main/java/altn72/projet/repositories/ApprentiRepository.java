@@ -10,21 +10,32 @@ import java.util.List;
 public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 
     List<Apprenti> findByMaitreApprentissageIsNull();
+    List<Apprenti> findByEtatNot(String etat);
 
     @Query("""
-    SELECT a FROM Apprenti a WHERE\s
-      (LOWER(a.prenom) LIKE LOWER(CONCAT('%',:name, '%')) OR LOWER(a.nom) LIKE LOWER(CONCAT('%',:name,'%'))) AND
-      (LOWER(a.mission.motsCles) LIKE LOWER(CONCAT('%',:keywords,'%')) )AND
-      (LOWER(a.entreprise.raisonSociale) LIKE LOWER(CONCAT('%',:enterprise, '%'))) AND
-      (LOWER(a.anneeAcademique.annee) LIKE LOWER(CONCAT('%',:promotion, '%')))""")
+    SELECT a FROM Apprenti a
+    WHERE
+      (:name IS NULL OR :name = '' OR
+        LOWER(a.prenom) LIKE LOWER(CONCAT('%', :name, '%')) OR
+        LOWER(a.nom) LIKE LOWER(CONCAT('%', :name, '%'))
+      )
+      AND (:keywords IS NULL OR :keywords = '' OR
+        LOWER(a.mission.motsCles) LIKE LOWER(CONCAT('%', :keywords, '%'))
+      )
+      AND (:enterprise IS NULL OR :enterprise = '' OR
+        LOWER(a.entreprise.raisonSociale) LIKE LOWER(CONCAT('%', :enterprise, '%'))
+      )
+      AND (:promotion IS NULL OR :promotion = '' OR
+        LOWER(a.anneeAcademique.annee) LIKE LOWER(CONCAT('%', :promotion, '%'))
+      )
+""")
     List<Apprenti> search(
             @Param("name") String name,
             @Param("enterprise") String enterprise,
             @Param("promotion") String promotion,
-            @Param("keywords") String keywords
-    );
+            @Param("keywords") String keywords);
 
-    @Query(value = "SELECT * FROM apprenti WHERE etat = 'ACTIF'", nativeQuery = true)
+    @Query(value = "SELECT * FROM javaproject.apprenti WHERE etat = 'ACTIF'", nativeQuery = true)
     List<Apprenti> getApprentisActifs();
 
 }

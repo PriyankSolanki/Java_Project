@@ -10,6 +10,17 @@
 
 <div th:replace="~{partials/navbar :: navbar}"></div>
 
+
+<div class="annee-form-wrapper">
+  <form action="/annees/creer" method="post" class="annee-form">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit">+ Nouvelle année académique</button>
+  </form>
+</div>
+
+
+
+
 <table>
   <caption th:text="'Promotion ' + ${anneeAcademique.annee}"></caption>
   <thead>
