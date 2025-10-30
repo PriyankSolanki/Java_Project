@@ -40,7 +40,7 @@ public class Apprenti {
     @OneToOne(cascade = CascadeType.MERGE)
     private Soutenance soutenance;
 
-    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Visite> visites;
 
     @Embedded
