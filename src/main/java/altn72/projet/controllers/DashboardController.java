@@ -2,15 +2,11 @@ package altn72.projet.controllers;
 
 import altn72.projet.entities.AnneeAcademique;
 import altn72.projet.entities.Apprenti;
-import altn72.projet.entities.TuteurEnseignant;
 import altn72.projet.exceptions.ApprentiNotFoundException;
 import altn72.projet.repositories.ApprentiRepository;
 import altn72.projet.services.AnneeAcademiqueService;
 import altn72.projet.services.ApprentiService;
 import org.springframework.beans.factory.annotation.Autowired;
-import altn72.projet.repositories.TuteurEnseignantRepository;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +19,6 @@ public class DashboardController {
 
     @Autowired
     private ApprentiRepository apprentiRepo;
-    @Autowired
-    private TuteurEnseignantRepository tuteurRepo;
     @Autowired
     private AnneeAcademiqueService anneeAcademiqueService;
     @Autowired
@@ -40,9 +34,7 @@ public class DashboardController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model, @AuthenticationPrincipal User principal) {
-        TuteurEnseignant tuteurEnseignantConnected = tuteurRepo.findByLogin(principal.getUsername())
-                .orElseThrow(() -> new RuntimeException("Tuteur non trouvé"));
+    public String dashboard(Model model) {
 
         List<Apprenti> apprentisActive = apprentiService.getApprentisActifs();
 
@@ -55,8 +47,6 @@ public class DashboardController {
 
         model.addAttribute("apprentis", apprentisActive);
         model.addAttribute("anneeAcademique", anneeAcademique);
-        model.addAttribute("prenom", tuteurEnseignantConnected.getPrenom());
-        model.addAttribute("nom", tuteurEnseignantConnected.getNom());
         return "pages/Dashboard";
     }
 

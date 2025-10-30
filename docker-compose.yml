@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  # === Base de données PostgreSQL ===
+  db:
+    image: postgres:16
+    container_name: tp_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: javaproject
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: javabase7213
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # === Application Spring Boot ===
+  app:
+    build: .
+    container_name: tp_fil_rouge_app
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/javaproject
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: javabase7213
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: javaproject
+      SPRING_JPA_OPEN_IN_VIEW: false
+    ports:
+      - "8080:8080"
+    restart: always
+
+volumes:
+  db_data:

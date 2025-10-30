@@ -25,10 +25,10 @@ public class Apprenti {
     @ManyToOne(cascade =CascadeType.MERGE)
     private Entreprise entreprise;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     private MaitreApprentissage maitreApprentissage;
 
-    @ManyToOne(cascade = {CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     private AnneeAcademique anneeAcademique;
 
     @ManyToOne
