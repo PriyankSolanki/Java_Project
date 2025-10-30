@@ -47,15 +47,12 @@ L’application permet :
 ```bash
 git clone https://github.com/PriyankSolanki/Java_Project.git
 cd <nom-du-projet
-```
-
-```bash
 mvn spring-boot:run
 ```
 
 ### 🧩 Base de données
 La base de données est hébergé via avec Supabase.
-Des données de tests sont déjà présent.
+Des données de tests sont déjà présentes.
 
 ### 🔓API Swagger
 ```

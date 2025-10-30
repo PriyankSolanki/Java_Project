@@ -13,6 +13,7 @@ Nous avons utilisé comme SGBD :
 
 ### 3.3 -
 Url d'accès générique : //site web pas encore héberger
+Url d'accès local : http://localhost:8080/login
 
 ### 3.4 -
 #### a -
@@ -26,8 +27,8 @@ Nous nous sommes rapidement bien répartis et équitablement le travail dans ce 
 
 #### d -
 Les 3 points qui nous ont marqué pendant ce cours sont :  
-- La clareté des TP, et le suivit du TP fil rouge était une approche très intéressante et nous a bien aider à comprendre le fonctionnement d'un projet JAVA.  
-- Le projet est bien adapté aux cours et nous permet de d'exploiter et de développer nos connaissances en plus de nous laisser une liberté pour en avoir de nouvelles.
+- La clareté des TP, et le suivit du TP fil rouge était une approche très intéressante et nous a bien aidé à comprendre le fonctionnement d'un projet JAVA.  
+- Le projet est bien adapté aux cours et nous permet d'exploiter et de développer nos connaissances en plus de nous laisser une liberté pour en avoir de nouvelles.
 - Les Quizz ont été un bon moyen d'évaluer nos connaissances, sans nous contraindre à écrire du code sur papier.
 
 #### e -
