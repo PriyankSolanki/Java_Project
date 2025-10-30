@@ -10,6 +10,7 @@ import java.util.List;
 public interface ApprentiRepository extends JpaRepository<Apprenti, Long> {
 
     List<Apprenti> findByMaitreApprentissageIsNull();
+    List<Apprenti> findByEtatNot(String etat);
 
     @Query("""
     SELECT a FROM Apprenti a WHERE\s
