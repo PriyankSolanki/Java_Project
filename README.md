@@ -37,7 +37,7 @@ L’application permet :
 ## 💿 Hébergement
 
 Notre application est directement hébergé au lien : 
-- (mettre le lien)
+- https://java-project-bt1s.onrender.com/login
 
 ## ⚙️ Configuration du projet
 
@@ -69,3 +69,7 @@ Un swagger est présent permettant de voir toutes les routes commandes de notre 
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
+
+### 📟 CSV
+Un fichier CSV est disponible à la racine du projet pour voir la nomenclature à respecter et pour tester l'import des apprentis via CSV. Nom du fichier : 
+- import_apprentis.csv

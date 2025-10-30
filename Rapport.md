@@ -12,13 +12,13 @@ Nous avons utilisé comme SGBD :
 - PostgreSQL, MariaDB et MySQL
 
 ### 3.3 -
-Url d'accès du site hébergé : //site web pas encore héberger
+Url d'accès du site hébergé : https://java-project-bt1s.onrender.com/login
 Url d'accès du site en local : http://localhost:8080/login
 
 La base de données est hébergé vie Supabase, mais si vous voulez utiliser une base de données locale, vous pouvez changer les paramètres dans application.properties.
 La base de données se créé et des données de tests s'insèrent automatiquement lors du premier lancement.
-De plus un scrip sql script_database.sql est disponible à la racine du projet.
-Un fichier CSV est disponible à la racine du projet pour vous permettre de tester l'ajout des apprenties via csv.
+De plus un scrip sql (script_database.sql) est disponible à la racine du projet.
+Un fichier CSV est disponible à la racine du projet (import_apprentis.csv) pour vous permettre de tester l'ajout des apprenties via csv.
 
 ### 3.4 -
 #### a -

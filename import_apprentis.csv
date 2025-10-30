@@ -1,0 +1,4 @@
+prenom,nom,email,telephone,adresse,etat,anneeLevel,entrepriseId,maitreId,tuteurId,anneeAcademiqueId,remarques,feedbackTuteurEnseignant
+Jean,Balmin,jean@efrei.net,0876543210,12 rue des poiriers,ACTIF,I2,1,1,1,1,Très bonne année,Très bonne élève,
+Rachel,Victoire,rachel@efrei.net,0912345678,17 rue des menthes,ACTIF,I2,2,2,1,1,Très belle année,Écoute en classe,
+Présence,Olive,présence@efrei.net,0766558877,64 rue des garagistes,ACTIF,I2,1,1,1,1,Mauvaise année,Mauvaise attitude,
